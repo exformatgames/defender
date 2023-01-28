@@ -9,10 +9,12 @@ public class EndContactComponent implements Component {
 
     public Entity contactEntity;
     public Contact contact;
+    public short categoryBits;
 
-    public EndContactComponent init(Entity contactEntity, Contact contact) {
+    public EndContactComponent init(Entity contactEntity, Contact contact, short categoryBits) {
         this.contactEntity = contactEntity;
         this.contact = contact;
+        this.categoryBits = categoryBits;
 
         return this;
     }

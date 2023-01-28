@@ -11,6 +11,7 @@ public class BeginContactComponent implements Component {
     public Entity contactEntity;
     public Body contactBody;
     public Contact contact;
+    public short categoryBits;
 
 
     public BeginContactComponent init(Entity contactEntity, Contact contact) {
@@ -24,6 +25,15 @@ public class BeginContactComponent implements Component {
         this.contactEntity = contactEntity;
         this.contact = contact;
         this.contactBody = contactBody;
+        return this;
+    }
+
+    public BeginContactComponent init(Entity contactEntity, Body contactBody, Contact contact, short categoryBits) {
+        this.contactEntity = contactEntity;
+        this.contactBody = contactBody;
+        this.contact = contact;
+        this.categoryBits = categoryBits;
+
         return this;
     }
 
