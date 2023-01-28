@@ -189,11 +189,11 @@ public abstract class Core {
 		addSystem(new CullingSystem(worldCamera));
 
 		if (asyncRender) {
-			addSystem(new AsyncSortRenderSystem(worldCamera, spriteBatch));
+			addSystem(new AsyncSortRenderSystem(worldViewport, spriteBatch));
 		}
 		else {
-			addSystem(new SortedRenderSystem(worldCamera, spriteBatch));
-			addSystem(new TextRenderSystem(uiCamera, spriteBatch));
+			addSystem(new SortedRenderSystem(worldViewport, spriteBatch));
+			addSystem(new TextRenderSystem(uiViewport, spriteBatch));
 		}
 	}
 	

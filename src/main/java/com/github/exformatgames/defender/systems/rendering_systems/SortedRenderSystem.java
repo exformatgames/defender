@@ -5,6 +5,7 @@ import com.badlogic.ashley.systems.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.exformatgames.defender.components.box2d.B2DParticleEmitterComponent;
 import com.github.exformatgames.defender.components.rendering_components.*;
 import com.github.exformatgames.defender.utils.ZComparator;
@@ -14,20 +15,24 @@ public class SortedRenderSystem extends SortedIteratingSystem {
 
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
+    private Viewport viewport;
 
     public static float FRAME_TIME = 0;
     private long startTime = 0;
 
-    public SortedRenderSystem(OrthographicCamera camera, SpriteBatch batch) {
+    public SortedRenderSystem(Viewport viewport, SpriteBatch batch) {
         super(Family.one(SpriteComponent.class, LightRenderComponent.class).get(), new ZComparator());
 
         this.batch = batch;
-        this.camera = camera;
+        this.camera = (OrthographicCamera) viewport.getCamera();
+        this.viewport = viewport;
     }
 
     @Override
     public void startProcessing() {
         startTime = TimeUtils.nanoTime();
+
+        viewport.apply(true);
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
