@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
+import com.github.exformatgames.defender.Constants;
 
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.*;
 
@@ -40,6 +41,10 @@ public class SpriteComponent implements Component {
 		setOrigin(width / 2, height / 2);
 		setOffsetXY(0, 0);
 		return this;
+	}
+
+	public SpriteComponent init(TextureRegion region) {
+		return init(region, Constants.SCL);
 	}
 
 	public SpriteComponent init(TextureRegion region, float scl, float offsetX, float offsetY) {
