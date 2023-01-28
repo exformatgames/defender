@@ -39,7 +39,7 @@ public abstract class Core {
 	protected OrthographicCamera worldCamera;
 	protected OrthographicCamera uiCamera;
 
-	protected Viewport gameViewport;
+	protected Viewport worldViewport;
 	protected Viewport uiViewport;
 
 	protected World box2DWorld;
@@ -70,13 +70,13 @@ public abstract class Core {
 	}
 
 	public Core(Vector2 viewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
-		Viewport viewport = new ExtendViewport(viewportSize.x, viewportSize.y);
-		viewport.apply(true);
+		worldViewport = new ExtendViewport(viewportSize.x, viewportSize.y);
+		worldViewport.apply(true);
 
-		Viewport uiViewport = new ExtendViewport(uiViewportSize.x, uiViewportSize.y);
+		uiViewport = new ExtendViewport(uiViewportSize.x, uiViewportSize.y);
 		uiViewport.apply(true);
 
-		this.worldCamera = (OrthographicCamera) viewport.getCamera();
+		this.worldCamera = (OrthographicCamera) worldViewport.getCamera();
 		this.uiCamera = (OrthographicCamera) uiViewport.getCamera();
 		this.box2DWorld = new World(gravity, true);
 		this.spriteBatch = new SpriteBatch();
@@ -243,8 +243,8 @@ public abstract class Core {
 	}
 
 	public void resize(int width, int height) {
-		if (gameViewport != null && uiViewport != null){
-			gameViewport.update(width, height, true);
+		if (worldViewport != null && uiViewport != null){
+			worldViewport.update(width, height, true);
 			uiViewport.update(width, height, true);
 		}
 	}
