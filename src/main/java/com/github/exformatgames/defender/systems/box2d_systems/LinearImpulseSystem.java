@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.github.exformatgames.defender.components.box2d.BodyComponent;
-import com.github.exformatgames.defender.components.box2d.LinearImpulseComponent;
+import com.github.exformatgames.defender.components.box2d.transform_components.LinearImpulseComponent;
 
 public class LinearImpulseSystem extends IteratingSystem {
 

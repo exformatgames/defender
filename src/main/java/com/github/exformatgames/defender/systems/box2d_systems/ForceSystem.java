@@ -3,7 +3,7 @@ package com.github.exformatgames.defender.systems.box2d_systems;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.systems.*;
 import com.github.exformatgames.defender.components.box2d.BodyComponent;
-import com.github.exformatgames.defender.components.box2d.ForceComponent;
+import com.github.exformatgames.defender.components.box2d.transform_components.ForceComponent;
 
 public class ForceSystem extends IteratingSystem {
 

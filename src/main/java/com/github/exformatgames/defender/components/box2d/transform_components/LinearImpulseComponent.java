@@ -1,4 +1,4 @@
-package com.github.exformatgames.defender.components.box2d;
+package com.github.exformatgames.defender.components.box2d.transform_components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;

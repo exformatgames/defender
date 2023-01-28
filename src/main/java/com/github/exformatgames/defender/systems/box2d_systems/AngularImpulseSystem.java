@@ -2,7 +2,7 @@ package com.github.exformatgames.defender.systems.box2d_systems;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.systems.*;
-import com.github.exformatgames.defender.components.box2d.AngularImpulseComponent;
+import com.github.exformatgames.defender.components.box2d.transform_components.AngularImpulseComponent;
 import com.github.exformatgames.defender.components.box2d.BodyComponent;
 
 public class AngularImpulseSystem extends IteratingSystem {
