@@ -45,7 +45,7 @@ public abstract class Core {
 	protected World box2DWorld;
 	protected SpriteBatch spriteBatch;
 	protected InputMultiplexer inputMultiplexer;
-	protected TextureAtlas atlas;
+	protected TextureAtlas textureAtlas;
 	protected AssetManager assetManager;
 
 	private final PooledEngine engine;
@@ -53,23 +53,23 @@ public abstract class Core {
 	private boolean stopEngine = false;
 	private float engineDeltaTime = 0;
 
-	public Core(OrthographicCamera gameCamera, OrthographicCamera uiCamera, World box2DWorld, SpriteBatch spriteBatch, InputMultiplexer inputMultiplexer, TextureAtlas atlas, AssetManager assetManager) {
+	public Core(OrthographicCamera gameCamera, OrthographicCamera uiCamera, World box2DWorld, SpriteBatch spriteBatch, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
 		this.worldCamera = gameCamera;
 		this.uiCamera = uiCamera;
 		this.box2DWorld = box2DWorld;
 		this.spriteBatch = spriteBatch;
 		this.inputMultiplexer = inputMultiplexer;
-		this.atlas = atlas;
+		this.textureAtlas = textureAtlas;
 		this.assetManager = assetManager;
 		
 		engine = new PooledEngine(50, 500, 50, 5000);
 	}
 
-	public Core(Vector2 viewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas atlas, AssetManager assetManager) {
-		this(viewportSize, viewportSize, gravity, inputMultiplexer, atlas, assetManager);
+	public Core(Vector2 viewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
+		this(viewportSize, viewportSize, gravity, inputMultiplexer, textureAtlas, assetManager);
 	}
 
-	public Core(Vector2 viewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas atlas, AssetManager assetManager) {
+	public Core(Vector2 viewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
 		Viewport viewport = new ExtendViewport(viewportSize.x, viewportSize.y);
 		viewport.apply(true);
 
@@ -81,7 +81,7 @@ public abstract class Core {
 		this.box2DWorld = new World(gravity, true);
 		this.spriteBatch = new SpriteBatch();
 		this.inputMultiplexer = inputMultiplexer;
-		this.atlas = atlas;
+		this.textureAtlas = textureAtlas;
 		this.assetManager = assetManager;
 		
 		engine = new PooledEngine(50, 500, 50, 5000);
@@ -95,7 +95,7 @@ public abstract class Core {
 	}
 	
 	public final void create(boolean isDebug, boolean asyncEngine){
-		EntityBuilder.init(box2DWorld, engine, atlas, worldCamera, assetManager);
+		EntityBuilder.init(box2DWorld, engine, textureAtlas, worldCamera, assetManager);
 		BodyBuilder.init(box2DWorld);
 
 		initEntities();//abstract
@@ -252,7 +252,7 @@ public abstract class Core {
 	public void dispose(){
 		stopEngine = true;
 
-		atlas.dispose();
+		textureAtlas.dispose();
 		if (box2DWorld != null) {
 			box2DWorld.dispose();
 		}
