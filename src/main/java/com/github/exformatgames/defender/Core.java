@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.math.*;
 import com.github.exformatgames.defender.utils.Box2DEntityBuilder;
@@ -70,10 +70,10 @@ public abstract class Core {
 	}
 
 	public Core(Vector2 viewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas atlas, AssetManager assetManager) {
-		Viewport viewport = new FitViewport(viewportSize.x, viewportSize.y);
+		Viewport viewport = new ExtendViewport(viewportSize.x, viewportSize.y);
 		viewport.apply(true);
 
-		Viewport uiViewport = new FitViewport(uiViewportSize.x, uiViewportSize.y);
+		Viewport uiViewport = new ExtendViewport(uiViewportSize.x, uiViewportSize.y);
 		uiViewport.apply(true);
 
 		this.worldCamera = (OrthographicCamera) viewport.getCamera();
