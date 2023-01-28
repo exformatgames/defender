@@ -13,11 +13,7 @@ public class SizeComponent implements Component {
 	public Vector2 size = new Vector2();
 
 	public void init(Vector2 size) {
-		this.size.set(size);
-		width = size.x;
-		height = size.y;
-		halfWidth = size.x / 2;
-		halfHeight = size.y / 2;
+		init(size.x, size.y);
 	}
 
 	public void init(float width, float height){
