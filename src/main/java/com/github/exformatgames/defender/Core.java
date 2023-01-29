@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.math.*;
+import com.github.exformatgames.defender.systems.util_system.*;
 import com.github.exformatgames.defender.utils.Box2DEntityBuilder;
 import com.github.exformatgames.defender.systems.audio_systems.MusicSystem;
 import com.github.exformatgames.defender.systems.audio_systems.PointSoundSystem;
@@ -26,10 +27,6 @@ import com.github.exformatgames.defender.systems.input_systems.ResetGestureInput
 import com.github.exformatgames.defender.systems.rendering_systems.*;
 import com.github.exformatgames.defender.systems.rendering_systems.ui.TextRenderSystem;
 import com.github.exformatgames.defender.systems.transform_systems.*;
-import com.github.exformatgames.defender.systems.util_system.CreateEntitySystem;
-import com.github.exformatgames.defender.systems.util_system.ExitSystem;
-import com.github.exformatgames.defender.systems.util_system.RemoveEntitySystem;
-import com.github.exformatgames.defender.systems.util_system.VibrationSystem;
 import com.github.exformatgames.defender.utils.B2DContactListener;
 import com.github.exformatgames.defender.utils.BodyBuilder;
 import com.github.exformatgames.defender.utils.EntityBuilder;
@@ -95,6 +92,8 @@ public abstract class Core {
 	}
 	
 	public final void create(boolean isDebug, boolean asyncEngine){
+		Configurations.VIEWPORTS_RATIO = Configurations.UI_HEIGHT / Configurations.WORLD_HEIGHT;
+
 		EntityBuilder.init(box2DWorld, engine, textureAtlas, worldCamera, assetManager);
 		BodyBuilder.init(box2DWorld);
 
@@ -124,6 +123,7 @@ public abstract class Core {
 		addSystem(new ResetGestureInputSystem());
 		addSystem(new ExitSystem());
 		addSystem(new RemoveEntitySystem(box2DWorld));
+		addSystem(new RemoveAllEntitiesSystem(box2DWorld));
 
 		if (asyncEngine){
 			new Thread(() -> {
