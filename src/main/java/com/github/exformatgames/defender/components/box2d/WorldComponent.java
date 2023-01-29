@@ -8,6 +8,7 @@ public class WorldComponent implements Component {
     public World world;
     public int velocityIteration = 4;
     public int positionIteration = 4;
+    public float deltaTimeScalar = 1;
 
     public void init(World world, int velocityIteration, int positionIteration) {
         this.world = world;

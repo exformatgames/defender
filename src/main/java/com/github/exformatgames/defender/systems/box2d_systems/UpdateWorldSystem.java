@@ -23,14 +23,14 @@ public class UpdateWorldSystem extends IteratingSystem {
 	public void endProcessing() {
 		FRAME_TIME = (TimeUtils.nanoTime() - startTime) / 1000_000f;
 	}
-	
-	
-	
+
+
+
 	@Override
 	protected void processEntity(Entity entity, float dt) {
 		WorldComponent worldComponent = WorldComponent.getComponent(entity);
 
-		worldComponent.world.step(dt, worldComponent.velocityIteration, worldComponent.positionIteration);
+		worldComponent.world.step(dt * worldComponent.deltaTimeScalar, worldComponent.velocityIteration, worldComponent.positionIteration);
 	}
 }
 
