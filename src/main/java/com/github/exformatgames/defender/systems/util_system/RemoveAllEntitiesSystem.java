@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.World;
 import com.github.exformatgames.defender.components.box2d.BodyComponent;
+import com.github.exformatgames.defender.components.box2d.WorldComponent;
 import com.github.exformatgames.defender.components.light_components.LightComponent;
 import com.github.exformatgames.defender.components.rendering_components.CullingComponent;
 import com.github.exformatgames.defender.components.rendering_components.ParticleEffectComponent;
@@ -47,11 +48,12 @@ public class RemoveAllEntitiesSystem extends IteratingSystem {
                 cullingComponent.inViewport = true;
             }
 
+            if (WorldComponent.getComponent(en) != null) {
+                continue;
+            }
             en.removeAll();
-
             getEngine().removeEntity(en);
         }
         entity.removeAll();
-        getEngine().removeAllEntities();
     }
 }
