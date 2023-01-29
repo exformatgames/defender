@@ -15,7 +15,7 @@ public class SortedRenderSystem extends SortedIteratingSystem {
 
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
-    private Viewport viewport;
+    private final Viewport viewport;
 
     public static float FRAME_TIME = 0;
     private long startTime = 0;

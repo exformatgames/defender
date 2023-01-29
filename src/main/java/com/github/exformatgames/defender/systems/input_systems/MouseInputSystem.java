@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.github.exformatgames.defender.Constants;
+import com.github.exformatgames.defender.Configurations;
 import com.github.exformatgames.defender.components.input_components.MouseComponent;
 import com.github.exformatgames.defender.components.input_components.button_event_components.ButtonJustPressedComponent;
 import com.github.exformatgames.defender.components.input_components.button_event_components.ButtonPressedComponent;
@@ -25,8 +25,8 @@ public class MouseInputSystem extends IteratingSystem {
         super(Family.one(ButtonPressedComponent.class, ButtonJustPressedComponent.class).get());
 
         this.camera = camera;
-        if (Constants.TARGET_BUTTONS.isEmpty()){
-            Constants.TARGET_BUTTONS.addAll(Constants.DEFAULT_BUTTONS);
+        if (Configurations.TARGET_BUTTONS.isEmpty()){
+            Configurations.TARGET_BUTTONS.addAll(Configurations.DEFAULT_BUTTONS);
         }
     }
 
@@ -38,7 +38,7 @@ public class MouseInputSystem extends IteratingSystem {
         pressedButtons.clear();
         justPressedButtons.clear();
 
-        for (int button: Constants.TARGET_BUTTONS){
+        for (int button: Configurations.TARGET_BUTTONS){
             if (Gdx.input.isButtonPressed(button)){
                 pressedButtons.add(button);
             }

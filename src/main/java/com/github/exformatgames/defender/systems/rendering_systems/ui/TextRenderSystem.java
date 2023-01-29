@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.exformatgames.defender.Configurations;
 import com.github.exformatgames.defender.components.rendering_components.ui.TextRenderComponent;
 import com.github.exformatgames.defender.components.transform_components.PositionComponent;
 
@@ -41,6 +42,6 @@ public class TextRenderSystem extends IteratingSystem {
         TextRenderComponent textRenderComponent = TextRenderComponent.getComponent(entity);
         PositionComponent positionComponent = PositionComponent.getComponent(entity);
 
-        textRenderComponent.bitmapFont.draw(spriteBatch, textRenderComponent.text, positionComponent.x, positionComponent.y);
+        textRenderComponent.bitmapFont.draw(spriteBatch, textRenderComponent.text, positionComponent.x * Configurations.VIEWPORTS_RATIO, positionComponent.y * Configurations.VIEWPORTS_RATIO);
     }
 }

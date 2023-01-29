@@ -13,7 +13,7 @@ import com.github.exformatgames.defender.components.transform_components.Animati
 public abstract class EntityBuilder {
 	protected static World world;
 	protected static PooledEngine engine;
-	protected static TextureAtlas atlas;
+	protected static TextureAtlas textureAtlas;
 	protected static OrthographicCamera camera;
 	protected static AssetManager assetManager;
 
@@ -30,7 +30,7 @@ public abstract class EntityBuilder {
 	public static void init(World w, PooledEngine e, TextureAtlas a, OrthographicCamera c, AssetManager am){
 		EntityBuilder.world = w;
 		EntityBuilder.engine = e;
-		EntityBuilder.atlas = a;
+		EntityBuilder.textureAtlas = a;
 		EntityBuilder.camera = c;
 		EntityBuilder.assetManager = am;
 	}
@@ -114,7 +114,7 @@ public abstract class EntityBuilder {
 		return type;
 	}
 	public Animation<TextureAtlas.AtlasRegion> createAnimation(String name, float frameDuration){
-		return new Animation<>(frameDuration, atlas.findRegions(name).toArray());
+		return new Animation<>(frameDuration, textureAtlas.findRegions(name).toArray());
 	}
 	protected static void resetBodyDef(){
 		BODY_DEF.type = BodyDef.BodyType.DynamicBody;

@@ -3,7 +3,7 @@ package com.github.exformatgames.defender;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Array;
 
-public class Constants {
+public class Configurations {
 
 	public static final Array<Integer> TARGET_KEYS = new Array<>();
 	public static final Array<Integer> TARGET_BUTTONS = new Array<>();
@@ -21,6 +21,8 @@ public class Constants {
 
 	public static float DIVIDER = 100;
 	public static float SCL = 0.01f;
+
+	public static float VIEWPORTS_RATIO = 100;
 
 	public static String prefsName = "default_name";
 

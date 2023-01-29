@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.github.exformatgames.defender.Constants;
+import com.github.exformatgames.defender.Configurations;
 import com.github.exformatgames.defender.systems.util_system.EventSystem;
 import com.github.exformatgames.defender.components.input_components.gesture_components.*;
 
@@ -219,13 +219,13 @@ public class GestureInputSystem extends EventSystem {
 
         @Override
         public boolean zoom(float initialDistance, float distance) {
-            initialDistance *= Constants.SCL;
-            distance *= Constants.SCL;
+            initialDistance *= Configurations.SCL;
+            distance *= Configurations.SCL;
 
             float differenceDistance = zoomDistance / distance;
             if (differenceDistance > 1.02f || differenceDistance < 0.98f) {
 
-                zoomDelta = differenceDistance < 1 ? Constants.ZOOM_BASIS : -Constants.ZOOM_BASIS;
+                zoomDelta = differenceDistance < 1 ? Configurations.ZOOM_BASIS : -Configurations.ZOOM_BASIS;
 
                 zoomInitialDistance = initialDistance;
                 zoomDistance = distance;
@@ -241,7 +241,7 @@ public class GestureInputSystem extends EventSystem {
         @Override
         public boolean fling(float velocityX, float velocityY, int button) {
             fling.set(velocityX, velocityY * -1);
-            fling.scl(Constants.SCL);
+            fling.scl(Configurations.SCL);
             currentEvent = TouchEvent.FLING;
 
             update();

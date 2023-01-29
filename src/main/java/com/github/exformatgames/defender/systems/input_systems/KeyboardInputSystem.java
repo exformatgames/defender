@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
-import com.github.exformatgames.defender.Constants;
+import com.github.exformatgames.defender.Configurations;
 import com.github.exformatgames.defender.components.input_components.key_events.KeyJustPressedComponent;
 import com.github.exformatgames.defender.components.input_components.key_events.KeyPressedComponent;
 
@@ -17,8 +17,8 @@ public class KeyboardInputSystem extends IteratingSystem {
     public KeyboardInputSystem() {
         super(Family.one(KeyPressedComponent.class, KeyJustPressedComponent.class).get());
 
-        if (Constants.TARGET_KEYS.isEmpty()) {
-            Constants.TARGET_KEYS.addAll(Constants.DEFAULT_KEYS);
+        if (Configurations.TARGET_KEYS.isEmpty()) {
+            Configurations.TARGET_KEYS.addAll(Configurations.DEFAULT_KEYS);
         }
     }
 
@@ -28,7 +28,7 @@ public class KeyboardInputSystem extends IteratingSystem {
         pressedKeys.clear();
         justPressedKeys.clear();
 
-        for (int key : Constants.TARGET_KEYS) {
+        for (int key : Configurations.TARGET_KEYS) {
             if (Gdx.input.isKeyPressed(key)) {
                 pressedKeys.add(key);
             }
