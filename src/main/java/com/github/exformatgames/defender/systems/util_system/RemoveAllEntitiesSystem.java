@@ -51,10 +51,7 @@ public class RemoveAllEntitiesSystem extends IteratingSystem {
 
             getEngine().removeEntity(en);
         }
-    }
-
-    @Override
-    public void endProcessing() {
+        entity.removeAll();
         getEngine().removeAllEntities();
     }
 }
