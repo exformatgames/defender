@@ -5,6 +5,6 @@ repositories {
     maven { url "https://jitpack.io" } 
 }
 dependencies {
-    implementation 'com.github.exformatgames:defender:0.5.5'
+    implementation 'com.github.exformatgames:defender:0.5.7'
 }
    
