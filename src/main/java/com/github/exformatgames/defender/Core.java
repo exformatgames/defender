@@ -66,8 +66,8 @@ public abstract class Core {
 		this(viewportSize, viewportSize, gravity, inputMultiplexer, textureAtlas, assetManager);
 	}
 
-	public Core(Vector2 viewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
-		worldViewport = new ExtendViewport(viewportSize.x, viewportSize.y);
+	public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
+		worldViewport = new ExtendViewport(worldViewportSize.x, worldViewportSize.y);
 		worldViewport.apply(true);
 
 		uiViewport = new ExtendViewport(uiViewportSize.x, uiViewportSize.y);
@@ -82,6 +82,10 @@ public abstract class Core {
 		this.assetManager = assetManager;
 		
 		engine = new PooledEngine(50, 500, 50, 5000);
+	}
+
+	public Core(Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
+		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), gravity, inputMultiplexer, textureAtlas, assetManager);
 	}
 
 	protected abstract void initEntities();
