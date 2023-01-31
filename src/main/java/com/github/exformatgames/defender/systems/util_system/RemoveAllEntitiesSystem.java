@@ -23,7 +23,13 @@ public class RemoveAllEntitiesSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+
+        RemoveAllEntitiesComponent component = RemoveAllEntitiesComponent.getComponent(entity);
         for (Entity en: getEngine().getEntities()) {
+
+            if (component.ignoredEntities.contains(en, true) || WorldComponent.getComponent(en) != null) {
+                continue;
+            }
 
             BodyComponent bodyComponent = BodyComponent.getComponent(en);
             if (bodyComponent != null){
@@ -48,9 +54,6 @@ public class RemoveAllEntitiesSystem extends IteratingSystem {
                 cullingComponent.inViewport = true;
             }
 
-            if (WorldComponent.getComponent(en) != null) {
-                continue;
-            }
             en.removeAll();
             getEngine().removeEntity(en);
         }
