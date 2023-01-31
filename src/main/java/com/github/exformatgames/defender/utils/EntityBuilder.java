@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.github.exformatgames.defender.components.box2d.BodyComponent;
 import com.github.exformatgames.defender.components.rendering_components.SpriteComponent;
+import com.github.exformatgames.defender.components.rendering_components.ZIndexComponent;
 import com.github.exformatgames.defender.components.transform_components.AnimationComponent;
 
 public abstract class EntityBuilder {
@@ -25,7 +27,7 @@ public abstract class EntityBuilder {
 	protected static ChainShape CHAIN_SHAPE = new ChainShape();
 	protected static EdgeShape EDGE_SHAPE = new EdgeShape();
 
-	private static Vector2 zeroVector = new Vector2();
+	private final static Vector2 zeroVector = new Vector2();
 	
 	public static void init(World w, PooledEngine e, TextureAtlas a, OrthographicCamera c, AssetManager am){
 		EntityBuilder.world = w;
@@ -61,6 +63,46 @@ public abstract class EntityBuilder {
 			else {
 				((SpriteComponent) type).spriteComponentArray.clear();
 				((SpriteComponent) type).spriteComponentArray.add((SpriteComponent) type);
+				entity.add(engine.createComponent(ZIndexComponent.class));
+				entity.add(type);
+			}
+
+			return type;
+		}
+
+		if (type instanceof AnimationComponent){
+			AnimationComponent owner = entity.getComponent(AnimationComponent.class);
+			if (owner != null) {
+				owner.animationComponentArray.add((AnimationComponent) type);
+			}
+			else {
+				((AnimationComponent) type).animationComponentArray.clear();
+				((AnimationComponent) type).animationComponentArray.add((AnimationComponent) type);
+				entity.add(type);
+			}
+			return type;
+		}
+
+		if (type instanceof BodyComponent) {
+			((BodyComponent) type).setEntityInUserData(entity);
+		}
+
+		entity.add(type);
+		return type;
+	}
+
+	public <T extends Component> T createComponent (Class<T> componentType) {
+		T type = engine.createComponent(componentType);
+
+		if (type instanceof SpriteComponent){
+			SpriteComponent owner = entity.getComponent(SpriteComponent.class);
+			if (owner != null) {
+				owner.spriteComponentArray.add((SpriteComponent) type);
+			}
+			else {
+				((SpriteComponent) type).spriteComponentArray.clear();
+				((SpriteComponent) type).spriteComponentArray.add((SpriteComponent) type);
+				entity.add(engine.createComponent(ZIndexComponent.class));
 				entity.add(type);
 			}
 			return type;
@@ -79,43 +121,18 @@ public abstract class EntityBuilder {
 			return type;
 		}
 
-		entity.add(type);
-		return type;
-	}
-
-	public <T extends Component> T createComponent (Class<T> componentType) {
-		T type = engine.createComponent(componentType);
-
-		if (type instanceof SpriteComponent){
-			SpriteComponent owner = entity.getComponent(SpriteComponent.class);
-			if (owner != null) {
-				owner.spriteComponentArray.add((SpriteComponent) type);
-			}
-			else {
-				((SpriteComponent) type).spriteComponentArray.add((SpriteComponent) type);
-				entity.add(type);
-			}
-			return type;
-		}
-
-		if (type instanceof AnimationComponent){
-			AnimationComponent owner = entity.getComponent(AnimationComponent.class);
-			if (owner != null) {
-				owner.animationComponentArray.add((AnimationComponent) type);
-			}
-			else {
-				((AnimationComponent) type).animationComponentArray.add((AnimationComponent) type);
-				entity.add(type);
-			}
-			return type;
+		if (type instanceof BodyComponent) {
+			((BodyComponent) type).setEntityInUserData(entity);
 		}
 
 		entity.add(type);
 		return type;
 	}
+
 	public Animation<TextureAtlas.AtlasRegion> createAnimation(String name, float frameDuration){
 		return new Animation<>(frameDuration, textureAtlas.findRegions(name).toArray());
 	}
+
 	protected static void resetBodyDef(){
 		BODY_DEF.type = BodyDef.BodyType.DynamicBody;
 		BODY_DEF.gravityScale = 1;
@@ -133,6 +150,7 @@ public abstract class EntityBuilder {
 		BODY_DEF.linearDamping = 0;
 		BODY_DEF.linearVelocity.set(0, 0);
 	}
+
 	protected static void resetFixtureDef(){
 		FIXTURE_DEF.shape = null;
 		FIXTURE_DEF.friction = 0.2f;
@@ -145,6 +163,7 @@ public abstract class EntityBuilder {
 		FIXTURE_DEF.filter.maskBits = -1;
 
 	}
+
 	protected static void resetShapes(){
 		CIRCLE_SHAPE.setPosition(zeroVector);
 		CIRCLE_SHAPE.setRadius(0);
@@ -155,6 +174,7 @@ public abstract class EntityBuilder {
 
 		EDGE_SHAPE.set(zeroVector, zeroVector);
 	}
+
 	protected static void resetAll(){
 		resetBodyDef();
 		resetFixtureDef();

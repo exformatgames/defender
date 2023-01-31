@@ -7,7 +7,9 @@ import com.badlogic.gdx.math.*;
 public class BodyComponent implements Component {
 
 	public Body body = null;
-	
+
+	private Entity entityUserData = null;
+
 	public Vector2 oldPosition = new Vector2();
 	public float oldRotation = 0;
 
@@ -15,6 +17,10 @@ public class BodyComponent implements Component {
 		this.body = body;
 		oldPosition.set(body.getPosition());
 		oldRotation = body.getAngle();
+
+		if (entityUserData != null) {
+			body.setUserData(entityUserData);
+		}
 
 		return this;
 	}
@@ -44,11 +50,8 @@ public class BodyComponent implements Component {
 		return this;
 	}
 
-	public BodyComponent setUserData(Object obj) {
-
-		body.setUserData(obj);
-
-		return this;
+	public void setEntityInUserData(Entity entity) {
+		this.entityUserData = entity;
 	}
 
 	public BodyComponent setFilter(Filter filter){
