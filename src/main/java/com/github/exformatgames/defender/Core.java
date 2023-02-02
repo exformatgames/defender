@@ -10,7 +10,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.math.*;
-import com.github.exformatgames.defender.entities.DebugEntityBuilder;
 import com.github.exformatgames.defender.systems.debug.*;
 import com.github.exformatgames.defender.systems.util_system.*;
 import com.github.exformatgames.defender.entities.Box2DEntityBuilder;
@@ -210,16 +209,16 @@ public abstract class Core {
 	}
 	
 	private void initDebugSystems(){
-		new DebugEntityBuilder().create();
-		addSystem(new DebugPrintEngineInfoSystem());
 		ShapeRenderer shapeRenderer = new ShapeRenderer();
 
 		if(box2DWorld != null){
 			addSystem(new DebugRayCastSystem(worldCamera, shapeRenderer));
 			addSystem(new DebugPhysicsSystem(worldCamera));
 		}
-		addSystem(new DebugSpriteSystem(worldCamera, uiCamera, spriteBatch, shapeRenderer));
+		addSystem(new DebugSpriteSystem(worldViewport, uiViewport, spriteBatch, shapeRenderer));
 		addSystem(new DebugShapesSystem(worldCamera, shapeRenderer));
+
+		addSystem(new DebugPrintEngineInfoSystem(spriteBatch, uiViewport));
 	}
 
 	public PooledEngine getEngine() {
