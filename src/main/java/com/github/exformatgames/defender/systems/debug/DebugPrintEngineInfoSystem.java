@@ -30,7 +30,7 @@ public class DebugPrintEngineInfoSystem extends IteratingSystem {
         this.camera = (OrthographicCamera) viewport.getCamera();
         this.viewport = viewport;
 
-        bitmapFont = new BitmapFont(Gdx.files.internal("font.fnt"));
+        bitmapFont = new BitmapFont(Gdx.files.internal("debug-font.fnt"));
         bitmapFont.getData().setScale(2);
         bitmapFont.setColor(Color.GREEN);
     }

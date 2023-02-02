@@ -35,7 +35,7 @@ public class DebugSpriteSystem extends IteratingSystem {
         this.worldCamera = (OrthographicCamera) worldViewport.getCamera();
         this.uiCamera = (OrthographicCamera) uiViewport.getCamera();
 
-        bitmapFont = new BitmapFont(Gdx.files.internal("font.fnt"));
+        bitmapFont = new BitmapFont(Gdx.files.internal("debug-font.fnt"));
         bitmapFont.getData().setScale(2);
     }
 
