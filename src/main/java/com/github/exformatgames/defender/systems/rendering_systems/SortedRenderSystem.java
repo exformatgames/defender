@@ -57,7 +57,9 @@ public class SortedRenderSystem extends SortedIteratingSystem {
         if (spriteComponent != null && (cullingComponent == null || cullingComponent.inViewport)) {
             applyShader(shaderComponent);
 
-            for (SpriteComponent sprite : spriteComponent.spriteComponentArray) {
+            for (int i = 0; i < spriteComponent.spriteComponentArray.size; i++) {
+                SpriteComponent sprite = spriteComponent.spriteComponentArray.get(i);
+
                 batch.draw(sprite.texture, sprite.getVertices(), 0, SpriteComponent.SPRITE_SIZE);
             }
         }

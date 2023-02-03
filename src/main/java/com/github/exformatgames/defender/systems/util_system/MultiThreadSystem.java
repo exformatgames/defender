@@ -12,7 +12,7 @@ public abstract class MultiThreadSystem extends EntitySystem {
 
     private Family family;
     protected ImmutableArray<Entity> entities;
-    private Array<Array<Entity>> matrix = new Array<>();
+    private final Array<Array<Entity>> matrix = new Array<>();
     private final Array<Future> futures = new Array<>();
 
     private final int THREADS;
@@ -68,7 +68,8 @@ public abstract class MultiThreadSystem extends EntitySystem {
 
         int counter = 1;
 
-        for (Array<Entity> array: matrix) {
+        for (int i = 0; i < matrix.size; i++) {
+            Array<Entity> array = matrix.get(i);
             array.clear();
         }
 
@@ -99,11 +100,10 @@ public abstract class MultiThreadSystem extends EntitySystem {
 
     private Future processRunnable(Array<Entity> entities, float deltaTime){
         return executorService.submit(() -> {
-            //System.out.println("thread: " + Thread.currentThread().getId() + " entities: " + entities.size);
-            for (Entity entity: entities) {
+            for (int i = 0; i < entities.size; i++) {
+                Entity entity = entities.get(i);
                 processEntity(entity, deltaTime);
             }
-            //System.out.println("end process thread, id: " + Thread.currentThread().getId());
         });
     }
 

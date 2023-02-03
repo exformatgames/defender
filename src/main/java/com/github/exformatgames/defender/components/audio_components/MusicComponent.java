@@ -14,7 +14,7 @@ public class MusicComponent implements Component {
 
 	public float volume = 0;
 
-	private static ComponentMapper<MusicComponent> mapper = ComponentMapper.getFor(MusicComponent.class);
+	private static final ComponentMapper<MusicComponent> mapper = ComponentMapper.getFor(MusicComponent.class);
 
 	public static MusicComponent getComponent(Entity entity) {
 		return mapper.get(entity);

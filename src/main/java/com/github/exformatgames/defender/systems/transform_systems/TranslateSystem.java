@@ -67,7 +67,8 @@ public class TranslateSystem extends IteratingSystem {
         }
 
         if (spriteComponent != null) {
-            for (SpriteComponent sprite : spriteComponent.spriteComponentArray) {
+            for (int i = 0; i < spriteComponent.spriteComponentArray.size; i++) {
+                SpriteComponent sprite = spriteComponent.spriteComponentArray.get(i);
                 sprite.y += translate.y;
                 sprite.x += translate.x;
 

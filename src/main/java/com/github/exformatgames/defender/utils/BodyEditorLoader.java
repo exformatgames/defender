@@ -18,7 +18,7 @@ import java.util.Map;
  * application. You only need to give it a body and the corresponding fixture
  * name, and it will attach these fixtures to your body.
  *
- * @author Aurelien Ribon | http://www.aurelienribon.com
+ * @author Aurelien Ribon | <a href="http://www.aurelienribon.com">...</a>
  */
 public class BodyEditorLoader {
 
@@ -26,7 +26,7 @@ public class BodyEditorLoader {
 	private final Model model;
 
 	// Reusable stuff
-	private final List<Vector2> vectorPool = new ArrayList<Vector2>();
+	private final List<Vector2> vectorPool = new ArrayList<>();
 	private final PolygonShape polygonShape = new PolygonShape();
 	private final CircleShape circleShape = new CircleShape();
 	private final Vector2 vec = new Vector2();
@@ -92,8 +92,8 @@ public class BodyEditorLoader {
 			fd.shape = polygonShape;
 			body.createFixture(fd);
 
-			for (int ii=0, nn=vertices.length; ii<nn; ii++) {
-				free(vertices[ii]);
+			for (Vector2 vertex : vertices) {
+				free(vertex);
 			}
 		}
 
@@ -148,19 +148,19 @@ public class BodyEditorLoader {
 	// -------------------------------------------------------------------------
 
 	public static class Model {
-		public final Map<String, RigidBodyModel> rigidBodies = new HashMap<String, RigidBodyModel>();
+		public final Map<String, RigidBodyModel> rigidBodies = new HashMap<>();
 	}
 
 	public static class RigidBodyModel {
 		public String name;
 		public String imagePath;
 		public final Vector2 origin = new Vector2();
-		public final List<PolygonModel> polygons = new ArrayList<PolygonModel>();
-		public final List<CircleModel> circles = new ArrayList<CircleModel>();
+		public final List<PolygonModel> polygons = new ArrayList<>();
+		public final List<CircleModel> circles = new ArrayList<>();
 	}
 
 	public static class PolygonModel {
-		public final List<Vector2> vertices = new ArrayList<Vector2>();
+		public final List<Vector2> vertices = new ArrayList<>();
 		private Vector2[] buffer; // used to avoid allocation in attachFixture()
 	}
 

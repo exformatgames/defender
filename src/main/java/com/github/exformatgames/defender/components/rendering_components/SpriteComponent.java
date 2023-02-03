@@ -254,21 +254,6 @@ public class SpriteComponent implements Component {
 		maxy = Math.max(maxy, vertices[Y2]);
 		maxy = Math.max(maxy, vertices[Y3]);
 		maxy = Math.max(maxy, vertices[Y4]);
-
-		/*
-		minx = minx > vertices[X2] ? vertices[X2] : minx;
-		minx = minx > vertices[X3] ? vertices[X3] : minx;
-		minx = minx > vertices[X4] ? vertices[X4] : minx;
-		maxx = maxx < vertices[X2] ? vertices[X2] : maxx;
-		maxx = maxx < vertices[X3] ? vertices[X3] : maxx;
-		maxx = maxx < vertices[X4] ? vertices[X4] : maxx;
-		miny = miny > vertices[Y2] ? vertices[Y2] : miny;
-		miny = miny > vertices[Y3] ? vertices[Y3] : miny;
-		miny = miny > vertices[Y4] ? vertices[Y4] : miny;
-		maxy = maxy < vertices[Y2] ? vertices[Y2] : maxy;
-		maxy = maxy < vertices[Y3] ? vertices[Y3] : maxy;
-		maxy = maxy < vertices[Y4] ? vertices[Y4] : maxy;
-		*/
 		
 		if (bounds == null) bounds = new Rectangle();		
 		

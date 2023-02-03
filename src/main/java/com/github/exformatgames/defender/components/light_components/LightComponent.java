@@ -58,6 +58,6 @@ public class LightComponent implements Component {
         DIRECTIONAL,
         POINT,
         CONE,
-        CHAIN;
+        CHAIN
     }
 }

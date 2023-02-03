@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.glutils.*;
 
 public class DebugLightSystem extends IteratingSystem {
 
-	private OrthographicCamera camera;
-	private ShapeRenderer ren;
+	private final OrthographicCamera camera;
+	private final ShapeRenderer ren;
 	
 
 

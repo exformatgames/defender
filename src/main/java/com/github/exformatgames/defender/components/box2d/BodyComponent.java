@@ -55,7 +55,8 @@ public class BodyComponent implements Component {
 	}
 
 	public BodyComponent setFilter(Filter filter){
-		for (Fixture fixture: body.getFixtureList()) {
+		for (int i = 0; i < body.getFixtureList().size; i++) {
+			Fixture fixture = body.getFixtureList().get(i);
 			fixture.setFilterData(filter);
 		}
 

@@ -15,7 +15,8 @@ public class ScaleSpriteSystem extends IteratingSystem {
         ScaleComponent scale = ScaleComponent.getComponent(entity);
         SpriteComponent spriteComponent = SpriteComponent.getComponent(entity);
 
-        for (SpriteComponent sprite : spriteComponent.spriteComponentArray) {
+        for (int i = 0; i < spriteComponent.spriteComponentArray.size; i++) {
+            SpriteComponent sprite = spriteComponent.spriteComponentArray.get(i);
             if (scale.isTo) {
                 sprite.scaleX = scale.toX;
                 sprite.scaleY = scale.toY;

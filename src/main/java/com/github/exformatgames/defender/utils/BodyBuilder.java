@@ -6,10 +6,10 @@ import com.badlogic.gdx.physics.box2d.*;
 public class BodyBuilder {
 
 	private static World world;
-	private static BodyDef bodyDef = new BodyDef();
-	private static FixtureDef fixtureDef = new FixtureDef();
-	private static CircleShape circleShape = new CircleShape();
-	private static PolygonShape polygonShape = new PolygonShape();
+	private static final BodyDef bodyDef = new BodyDef();
+	private static final FixtureDef fixtureDef = new FixtureDef();
+	private static final CircleShape circleShape = new CircleShape();
+	private static final PolygonShape polygonShape = new PolygonShape();
 
 	public static void init(World world) {
 		BodyBuilder.world = world;

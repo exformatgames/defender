@@ -55,7 +55,9 @@ public class DebugSpriteSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float dt) {
         SpriteComponent spriteComponent = SpriteComponent.getComponent(entity);
-        for (SpriteComponent sprite : spriteComponent.spriteComponentArray) {
+        for (int i = 0; i < spriteComponent.spriteComponentArray.size; i++) {
+            SpriteComponent sprite = spriteComponent.spriteComponentArray.get(i);
+
             Rectangle rect = sprite.getBoundingRectangle();
             shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
             shapeRenderer.setColor(Color.WHITE);

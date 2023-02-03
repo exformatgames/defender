@@ -38,7 +38,8 @@ public class MouseInputSystem extends IteratingSystem {
         pressedButtons.clear();
         justPressedButtons.clear();
 
-        for (int button: Configurations.TARGET_BUTTONS){
+        for (int i = 0; i < Configurations.TARGET_BUTTONS.size; i++){
+            int button = Configurations.TARGET_BUTTONS.get(i);
             if (Gdx.input.isButtonPressed(button)){
                 pressedButtons.add(button);
             }

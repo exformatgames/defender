@@ -24,6 +24,6 @@ public class PreferencesSetComponent implements Component {
 		STRING,
 		BOOL,
 		INT,
-		FLOAT;
+		FLOAT
 	}
 }

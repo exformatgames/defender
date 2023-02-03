@@ -28,7 +28,8 @@ public class KeyboardInputSystem extends IteratingSystem {
         pressedKeys.clear();
         justPressedKeys.clear();
 
-        for (int key : Configurations.TARGET_KEYS) {
+        for (int i = 0; i < Configurations.TARGET_KEYS.size; i++) {
+            int key = Configurations.TARGET_KEYS.get(i);
             if (Gdx.input.isKeyPressed(key)) {
                 pressedKeys.add(key);
             }

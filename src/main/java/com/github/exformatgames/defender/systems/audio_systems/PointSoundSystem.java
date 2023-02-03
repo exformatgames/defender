@@ -11,7 +11,7 @@ public class PointSoundSystem extends IteratingSystem {
 	
 	private final OrthographicCamera camera;
 	private final Vector2 camPos = new Vector2();
-	private final Interpolation fun = Interpolation.circleIn;;
+	private final Interpolation fun = Interpolation.circleIn;
 	private final Vector2 normal = new Vector2();
 	
 	public PointSoundSystem(OrthographicCamera camera){

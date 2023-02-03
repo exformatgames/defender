@@ -13,8 +13,6 @@ import com.github.exformatgames.defender.Configurations;
 import com.github.exformatgames.defender.components.box2d.BodyComponent;
 import com.github.exformatgames.defender.components.box2d.WorldComponent;
 import com.github.exformatgames.defender.components.box2d.contact_components.BeginContactComponent;
-import com.github.exformatgames.defender.components.rendering_components.ui.TextRenderComponent;
-import com.github.exformatgames.defender.components.util_components.DebugComponent;
 
 public class DebugPrintEngineInfoSystem extends IteratingSystem {
 
