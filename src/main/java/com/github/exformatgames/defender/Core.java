@@ -44,7 +44,8 @@ public abstract class Core {
 
 	private final PooledEngine engine;
 
-	private boolean stopEngine = false;
+	private boolean STOP_ENGINE = false;
+	private boolean PAUSE_ENGINE = false;
 	private float engineDeltaTime = 0;
 
 	public Core(OrthographicCamera gameCamera, OrthographicCamera uiCamera, World box2DWorld, SpriteBatch spriteBatch, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
@@ -92,7 +93,7 @@ public abstract class Core {
 		engine.update(deltaTime);
 	}
 	
-	public final void create(boolean isDebug, boolean asyncEngine){
+	public final void create(boolean isDebug){
 		Configurations.VIEWPORTS_RATIO = Configurations.UI_HEIGHT / Configurations.WORLD_HEIGHT;
 
 		EntityBuilder.init(box2DWorld, engine, textureAtlas, worldCamera, assetManager);
@@ -114,27 +115,16 @@ public abstract class Core {
 		initTransformSystems();
 		initParticleSystems();
 
-		initRenderSystems(asyncEngine);
-
+		initRenderSystems();
 		initUtilsSystems();
 		
-		if(isDebug && ! asyncEngine)
+		if(isDebug)
 			initDebugSystems();
 		
 		addSystem(new ResetGestureInputSystem());
 		addSystem(new ExitSystem());
 		addSystem(new RemoveEntitySystem(box2DWorld));
 		addSystem(new RemoveAllEntitiesSystem(box2DWorld));
-
-		if (asyncEngine){
-			new Thread(() -> {
-				while (!stopEngine){
-					long start = System.nanoTime();
-					update(engineDeltaTime);
-					engineDeltaTime = (System.nanoTime() - start) / 1000_000_000f;
-				}
-			}).start();
-		}
 	}
 	
 	private void initInputSystems(){
@@ -185,17 +175,11 @@ public abstract class Core {
 		addSystem(new TranslateSystem());
 	}
 	
-	private void initRenderSystems(boolean asyncRender){
-		addSystem(new OrthogonalMapRenderSystem(worldCamera));
+	private void initRenderSystems(){
 		addSystem(new CullingSystem(worldCamera));
-
-		if (asyncRender) {
-			addSystem(new AsyncSortRenderSystem(worldViewport, spriteBatch));
-		}
-		else {
-			addSystem(new SortedRenderSystem(worldViewport, spriteBatch));
-			addSystem(new TextRenderSystem(uiViewport, spriteBatch));
-		}
+		addSystem(new OrthogonalMapRenderSystem(worldCamera));
+		addSystem(new SortedRenderSystem(worldViewport, spriteBatch));
+		addSystem(new TextRenderSystem(uiViewport, spriteBatch));
 	}
 	
 	private void initParticleSystems(){
@@ -252,9 +236,15 @@ public abstract class Core {
 		}
 	}
 
-	public void dispose(){
-		stopEngine = true;
+	public void pause() {
+		PAUSE_ENGINE = true;
+	}
 
+	public void resume() {
+		PAUSE_ENGINE = false;
+	}
+
+	public void dispose(){
 		textureAtlas.dispose();
 		if (box2DWorld != null) {
 			box2DWorld.dispose();
