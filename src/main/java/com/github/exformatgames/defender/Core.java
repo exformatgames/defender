@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.math.*;
 import com.github.exformatgames.defender.systems.debug.*;
+import com.github.exformatgames.defender.systems.rendering_systems.ui.AsyncTextRenderSystem;
 import com.github.exformatgames.defender.systems.util_system.*;
 import com.github.exformatgames.defender.entities.Box2DEntityBuilder;
 import com.github.exformatgames.defender.systems.audio_systems.MusicSystem;
@@ -43,6 +44,12 @@ public abstract class Core {
 	protected AssetManager assetManager;
 
 	private final PooledEngine engine;
+
+	private boolean STOP_ENGINE = false;
+	private boolean PAUSE_ENGINE = false;
+	private float engineDeltaTime = 0;
+
+	private Thread thread;
 
 	public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
 		worldViewport = new ExtendViewport(worldViewportSize.x, worldViewportSize.y);
@@ -89,15 +96,15 @@ public abstract class Core {
 	public void update(float deltaTime){
 		engine.update(deltaTime);
 	}
-	
-	public final void create(boolean isDebug){
+
+	public final void create(boolean isDebug, boolean asyncEngine){
 		Configurations.VIEWPORTS_RATIO = Configurations.UI_HEIGHT / Configurations.WORLD_HEIGHT;
 
 		EntityBuilder.init(box2DWorld, engine, textureAtlas, worldCamera, assetManager);
 		BodyBuilder.init(box2DWorld);
 
 		initEntities();//abstract
-		
+
 		initInputSystems();
 
 		if(box2DWorld != null){
@@ -112,16 +119,31 @@ public abstract class Core {
 		initTransformSystems();
 		initParticleSystems();
 
-		initRenderSystems();
+		initRenderSystems(asyncEngine);
+
 		initUtilsSystems();
-		
-		if(isDebug)
+
+		if(isDebug && ! asyncEngine)
 			initDebugSystems();
-		
+
 		addSystem(new ResetGestureInputSystem());
 		addSystem(new ExitSystem());
 		addSystem(new RemoveEntitySystem(box2DWorld));
 		addSystem(new RemoveAllEntitiesSystem(box2DWorld));
+
+		if (asyncEngine){
+			thread = new Thread(() -> {
+				while (!STOP_ENGINE){
+					if (!PAUSE_ENGINE){
+						long start = System.nanoTime();
+						update(engineDeltaTime);
+						engineDeltaTime = (System.nanoTime() - start) / 1000_000_000f;
+					}
+				}
+			});
+
+			thread.start();
+		}
 	}
 	
 	private void initInputSystems(){
@@ -171,12 +193,20 @@ public abstract class Core {
 		addSystem(new TransformLightComponentSystem());
 		addSystem(new TranslateSystem());
 	}
-	
-	private void initRenderSystems(){
+
+	private void initRenderSystems(boolean asyncRender){
 		addSystem(new CullingSystem(worldCamera));
-		addSystem(new OrthogonalMapRenderSystem(worldCamera));
-		addSystem(new SortedRenderSystem(worldViewport, spriteBatch));
-		addSystem(new TextRenderSystem(uiViewport, spriteBatch));
+
+		if (asyncRender) {
+			addSystem(new AsyncOrthoMapRenderSystem(worldCamera));
+			addSystem(new AsyncSortRenderSystem(worldViewport, spriteBatch));
+			addSystem(new AsyncTextRenderSystem(uiViewport, spriteBatch));
+		}
+		else {
+			addSystem(new OrthogonalMapRenderSystem(worldCamera));
+			addSystem(new SortedRenderSystem(worldViewport, spriteBatch));
+			addSystem(new TextRenderSystem(uiViewport, spriteBatch));
+		}
 	}
 	
 	private void initParticleSystems(){
@@ -234,11 +264,17 @@ public abstract class Core {
 	}
 
 	public void pause() {
+		PAUSE_ENGINE = true;
 	}
 
-	public void resume() {}
+	public void resume() {
+		PAUSE_ENGINE = false;
+	}
 
 	public void dispose(){
+
+		STOP_ENGINE = true;
+
 		textureAtlas.dispose();
 		if (box2DWorld != null) {
 			box2DWorld.dispose();
