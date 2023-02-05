@@ -4,15 +4,11 @@ Implements the minimum required to be set of components and systems for developi
 
 In debug mode, draws the contours of sprites, bodies, etc.
 
-render systems.
-
+Render systems.
 Transform systems.
-
 Box2D systems.
-
-audio systems.
-
-input systems.
+Audio systems.
+Input systems.
 
 EntityBuilder
 BodyBuilder.
@@ -24,6 +20,6 @@ repositories {
     maven { url "https://jitpack.io" } 
 }
 dependencies {
-    implementation 'com.github.exformatgames:defender:0.1.3-bgfx'
+    implementation 'com.github.exformatgames:defender:0.1.3-stable'
 }
    
