@@ -36,33 +36,13 @@ public abstract class Core {
 	protected Viewport worldViewport;
 	protected Viewport uiViewport;
 
-	protected World box2DWorld;
+	protected World box2DWorld = null;
 	protected SpriteBatch spriteBatch;
 	protected InputMultiplexer inputMultiplexer;
 	protected TextureAtlas textureAtlas;
 	protected AssetManager assetManager;
 
 	private final PooledEngine engine;
-
-	private boolean STOP_ENGINE = false;
-	private boolean PAUSE_ENGINE = false;
-	private float engineDeltaTime = 0;
-
-	public Core(OrthographicCamera gameCamera, OrthographicCamera uiCamera, World box2DWorld, SpriteBatch spriteBatch, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
-		this.worldCamera = gameCamera;
-		this.uiCamera = uiCamera;
-		this.box2DWorld = box2DWorld;
-		this.spriteBatch = spriteBatch;
-		this.inputMultiplexer = inputMultiplexer;
-		this.textureAtlas = textureAtlas;
-		this.assetManager = assetManager;
-		
-		engine = new PooledEngine(50, 500, 50, 5000);
-	}
-
-	public Core(Vector2 viewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
-		this(viewportSize, viewportSize, gravity, inputMultiplexer, textureAtlas, assetManager);
-	}
 
 	public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
 		worldViewport = new ExtendViewport(worldViewportSize.x, worldViewportSize.y);
@@ -73,17 +53,34 @@ public abstract class Core {
 
 		this.worldCamera = (OrthographicCamera) worldViewport.getCamera();
 		this.uiCamera = (OrthographicCamera) uiViewport.getCamera();
-		this.box2DWorld = new World(gravity, true);
+
+		if (gravity != null) {
+			this.box2DWorld = new World(gravity, true);
+		}
 		this.spriteBatch = new SpriteBatch();
 		this.inputMultiplexer = inputMultiplexer;
 		this.textureAtlas = textureAtlas;
 		this.assetManager = assetManager;
-		
+
+		Gdx.input.setInputProcessor(inputMultiplexer);
+
 		engine = new PooledEngine(50, 500, 50, 5000);
+	}
+
+	public Core(Vector2 viewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
+		this(viewportSize, viewportSize, gravity, inputMultiplexer, textureAtlas, assetManager);
 	}
 
 	public Core(Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
 		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), gravity, inputMultiplexer, textureAtlas, assetManager);
+	}
+
+	public Core(Vector2 gravity, TextureAtlas textureAtlas, AssetManager assetManager) {
+		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), gravity, new InputMultiplexer(), textureAtlas, assetManager);
+	}
+
+	public Core(TextureAtlas textureAtlas, AssetManager assetManager) {
+		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), null, new InputMultiplexer(), textureAtlas, assetManager);
 	}
 
 	protected abstract void initEntities();
@@ -237,12 +234,9 @@ public abstract class Core {
 	}
 
 	public void pause() {
-		PAUSE_ENGINE = true;
 	}
 
-	public void resume() {
-		PAUSE_ENGINE = false;
-	}
+	public void resume() {}
 
 	public void dispose(){
 		textureAtlas.dispose();
