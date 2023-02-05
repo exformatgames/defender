@@ -240,6 +240,8 @@ public abstract class Core {
 
 	public void pause() {}
 
+	public void hide() {}
+
 	public void resume() {}
 
 	public void dispose(){
