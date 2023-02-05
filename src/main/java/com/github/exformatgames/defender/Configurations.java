@@ -24,7 +24,7 @@ public class Configurations {
 
 	public static float VIEWPORTS_RATIO = 100;
 
-	public static String prefsName = "default_name";
+	public static String PREFERENCES_NAME = "default_name";
 
 	public static float WORLD_WIDTH = 10.8f;
 	public static float WORLD_HEIGHT = 19.2f;

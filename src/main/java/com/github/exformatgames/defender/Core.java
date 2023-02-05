@@ -186,7 +186,8 @@ public abstract class Core {
 	
 	private void initUtilsSystems(){
 		engine.addSystem(new CreateEntitySystem());
-		//engine.addSystem(new PreferencesSystem()); //TODO not work!!!
+		engine.addSystem(new SetPreferencesSystem());
+		engine.addSystem(new GetPreferencesSystem());
 	}
 	
 	private void initDebugSystems(){
@@ -226,6 +227,10 @@ public abstract class Core {
 		return inputMultiplexer;
 	}
 
+	public SpriteBatch getSpriteBatch() {
+		return spriteBatch;
+	}
+
 	public void resize(int width, int height) {
 		if (worldViewport != null && uiViewport != null){
 			worldViewport.update(width, height, true);
@@ -233,8 +238,7 @@ public abstract class Core {
 		}
 	}
 
-	public void pause() {
-	}
+	public void pause() {}
 
 	public void resume() {}
 
