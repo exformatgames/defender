@@ -21,14 +21,17 @@ public class RayCastSystem extends IteratingSystem {
 
         this.world = world;
 
-        callback = (fixture, point, normal, fraction) -> {
-            if (fraction < RayCastSystem.this.closestFraction) {
-                RayCastSystem.this.closestFraction = fraction;
-                RayCastSystem.this.collisionPoint.set(point);
-                RayCastSystem.this.collisionFixture = fixture;
-            }
+        callback = new RayCastCallback() {
+            @Override
+            public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
+                if (fraction < RayCastSystem.this.closestFraction) {
+                    RayCastSystem.this.closestFraction = fraction;
+                    RayCastSystem.this.collisionPoint.set(point);
+                    RayCastSystem.this.collisionFixture = fixture;
+                }
 
-            return 1;
+                return 1;
+            }
         };
     }
 
