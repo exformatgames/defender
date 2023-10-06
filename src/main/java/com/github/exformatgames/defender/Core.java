@@ -44,6 +44,14 @@ public abstract class Core {
 
 	private final PooledEngine engine;
 
+	private boolean debug = false;
+	private ShapeRenderer debugShapeRenderer = new ShapeRenderer();
+	private DebugRayCastSystem debugRayCastSystem;
+	private DebugPhysicsSystem debugPhysicsSystem;
+	private DebugShapesSystem debugShapesSystem;
+	private DebugSpriteSystem debugSpriteSystem;
+	private DebugPrintEngineInfoSystem debugPrintEngineInfoSystem;
+
 	public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
 		worldViewport = new ExtendViewport(worldViewportSize.x, worldViewportSize.y);
 		worldViewport.apply(true);
@@ -115,9 +123,11 @@ public abstract class Core {
 		initRenderSystems();
 		initUtilsSystems();
 		
-		if(isDebug)
-			initDebugSystems();
-		
+		if(isDebug) {
+			this.debug = true;
+			addDebugSystems();
+		}
+
 		addSystem(new ResetGestureInputSystem());
 		addSystem(new ExitSystem());
 		addSystem(new RemoveEntitySystem(box2DWorld));
@@ -189,18 +199,32 @@ public abstract class Core {
 		engine.addSystem(new SetPreferencesSystem());
 		engine.addSystem(new GetPreferencesSystem());
 	}
-	
-	private void initDebugSystems(){
-		ShapeRenderer shapeRenderer = new ShapeRenderer();
+
+
+
+	private void addDebugSystems(){
 
 		if(box2DWorld != null){
-			addSystem(new DebugRayCastSystem(worldCamera, shapeRenderer));
-			addSystem(new DebugPhysicsSystem(worldCamera));
-		}
-		addSystem(new DebugSpriteSystem(worldViewport, uiViewport, spriteBatch, shapeRenderer));
-		addSystem(new DebugShapesSystem(worldCamera, shapeRenderer));
+			if (debugRayCastSystem == null)
+				debugRayCastSystem = new DebugRayCastSystem(worldCamera, debugShapeRenderer);
 
-		addSystem(new DebugPrintEngineInfoSystem(spriteBatch, uiViewport));
+			if (debugPhysicsSystem == null)
+				debugPhysicsSystem = new DebugPhysicsSystem(worldCamera);
+
+			addSystem(debugRayCastSystem);
+			addSystem(debugPhysicsSystem);
+		}
+
+		if (debugSpriteSystem == null)
+			debugSpriteSystem = new DebugSpriteSystem(worldViewport, uiViewport, spriteBatch, debugShapeRenderer);
+		if (debugShapesSystem == null)
+			debugShapesSystem = new DebugShapesSystem(worldCamera, debugShapeRenderer);
+		if (debugPrintEngineInfoSystem == null)
+			debugPrintEngineInfoSystem = new DebugPrintEngineInfoSystem(spriteBatch, uiViewport);
+
+		addSystem(debugSpriteSystem);
+		addSystem(debugShapesSystem);
+		addSystem(debugPrintEngineInfoSystem);
 	}
 
 	public PooledEngine getEngine() {
@@ -250,5 +274,36 @@ public abstract class Core {
 			box2DWorld.dispose();
 		}
 		assetManager.dispose();
+	}
+
+	public Core debugOn() {
+		if ( !debug) {
+			addDebugSystems();
+		}
+		return this;
+	}
+
+	public Core debugOff() {
+		if (debug) {
+			if(box2DWorld != null){
+				if (debugRayCastSystem != null)
+					engine.removeSystem(debugRayCastSystem);
+
+				if (debugPhysicsSystem != null)
+					engine.removeSystem(debugPhysicsSystem);
+			}
+
+			if (debugSpriteSystem != null)
+				engine.removeSystem(debugSpriteSystem);
+			if (debugShapesSystem != null)
+				engine.removeSystem(debugShapesSystem);
+			if (debugPrintEngineInfoSystem != null)
+				engine.removeSystem(debugPrintEngineInfoSystem);
+		}
+		return this;
+	}
+
+	public boolean isDebug() {
+		return debug;
 	}
 }
