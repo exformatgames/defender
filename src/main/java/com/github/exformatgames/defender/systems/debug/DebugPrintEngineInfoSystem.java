@@ -58,7 +58,7 @@ public class DebugPrintEngineInfoSystem extends IteratingSystem {
         }
 
         String info = "FPS: " + FPS
-                + "awg FPS: " + avgFPS / avgFPSCounter
+                + "\nawg FPS: " + avgFPS / avgFPSCounter
                 + "\nentities: " + entities
                 + "\ncomponents: " + components;
 
