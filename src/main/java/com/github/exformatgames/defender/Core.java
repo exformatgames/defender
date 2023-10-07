@@ -37,6 +37,7 @@ public abstract class Core {
 	protected Viewport uiViewport;
 
 	protected World box2DWorld = null;
+
 	protected SpriteBatch spriteBatch;
 	protected InputMultiplexer inputMultiplexer;
 
@@ -307,5 +308,27 @@ public abstract class Core {
 
 	public boolean isDebug() {
 		return debug;
+	}
+
+	public Viewport getWorldViewport() {
+		return worldViewport;
+	}
+
+	public void setWorldViewport(Viewport worldViewport) {
+		this.worldViewport = worldViewport;
+		worldCamera = (OrthographicCamera) worldViewport.getCamera();
+	}
+
+	public Viewport getUiViewport() {
+		return uiViewport;
+	}
+
+	public void setUiViewport(Viewport uiViewport) {
+		this.uiViewport = uiViewport;
+		uiCamera = (OrthographicCamera) uiViewport.getCamera();
+	}
+
+	public void setSpriteBatch(SpriteBatch spriteBatch) {
+		this.spriteBatch = spriteBatch;
 	}
 }
