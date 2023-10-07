@@ -22,6 +22,9 @@ public class DebugPrintEngineInfoSystem extends IteratingSystem {
 
     private final BitmapFont bitmapFont;
 
+    private float avgFPS = 0;
+    private int avgFPSCounter = 0;
+
     public DebugPrintEngineInfoSystem(SpriteBatch spriteBatch, Viewport viewport) {
         super(Family.all().get());
         this.spriteBatch = spriteBatch;
@@ -46,7 +49,16 @@ public class DebugPrintEngineInfoSystem extends IteratingSystem {
             components += en.getComponents().size();
         }
 
-        String info = "FPS: " + (int)(1 / deltaTime)
+        int FPS = (int)(1 / deltaTime);
+        avgFPS += FPS;
+        avgFPSCounter++;
+        if (avgFPSCounter < 0) {
+            avgFPSCounter = 1;
+            avgFPS = FPS;
+        }
+
+        String info = "FPS: " + FPS
+                + "awg FPS: " + avgFPS / avgFPSCounter
                 + "\nentities: " + entities
                 + "\ncomponents: " + components;
 
