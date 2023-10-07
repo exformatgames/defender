@@ -60,6 +60,12 @@ public class SpriteComponent implements Component {
 		offsetRotation = 0;
 		return this;
 	}
+	public SpriteComponent init(TextureRegion region, float scl) {
+		return init(region, scl, 0, 0);
+	}
+	public SpriteComponent init(TextureRegion region) {
+		return init(region, Configurations.SCL);
+	}
 
 	public SpriteComponent setSize(float width, float height) {
 		this.width = width;		
