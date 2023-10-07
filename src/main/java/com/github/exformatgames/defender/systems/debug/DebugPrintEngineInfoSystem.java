@@ -47,13 +47,13 @@ public class DebugPrintEngineInfoSystem extends IteratingSystem {
         }
 
         String info = "FPS: " + (int)(1 / deltaTime)
-                + " entities: " + entities
-                + " components: " + components;
+                + "\nentities: " + entities
+                + "\ncomponents: " + components;
 
         if (getEngine().getEntitiesFor(Family.one(WorldComponent.class).get()).size() != 0) {
             int bodies = getEngine().getEntitiesFor(Family.one(BodyComponent.class).get()).size();
             int contacts = getEngine().getEntitiesFor(Family.one(BeginContactComponent.class).get()).size();
-            info += " bodies: " + bodies + " contacts: " + contacts;
+            info += "\nbodies: " + bodies + "\ncontacts: " + contacts;
         }
 
         bitmapFont.draw(spriteBatch, info, 0.1f * Configurations.VIEWPORTS_RATIO, Configurations.UI_HEIGHT);

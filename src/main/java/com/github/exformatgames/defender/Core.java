@@ -39,7 +39,8 @@ public abstract class Core {
 	protected World box2DWorld = null;
 	protected SpriteBatch spriteBatch;
 	protected InputMultiplexer inputMultiplexer;
-	protected TextureAtlas textureAtlas;
+
+	public static TextureAtlas TEXTURE_ATLAS;
 	protected AssetManager assetManager;
 
 	private final PooledEngine engine;
@@ -53,6 +54,8 @@ public abstract class Core {
 	private DebugPrintEngineInfoSystem debugPrintEngineInfoSystem;
 
 	public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
+		TEXTURE_ATLAS = textureAtlas;
+
 		worldViewport = new ExtendViewport(worldViewportSize.x, worldViewportSize.y);
 		worldViewport.apply(true);
 
@@ -67,7 +70,6 @@ public abstract class Core {
 		}
 		this.spriteBatch = new SpriteBatch();
 		this.inputMultiplexer = inputMultiplexer;
-		this.textureAtlas = textureAtlas;
 		this.assetManager = assetManager;
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
@@ -101,7 +103,7 @@ public abstract class Core {
 	public final void create(boolean isDebug){
 		Configurations.VIEWPORTS_RATIO = Configurations.UI_HEIGHT / Configurations.WORLD_HEIGHT;
 
-		EntityBuilder.init(box2DWorld, engine, textureAtlas, worldCamera, assetManager);
+		EntityBuilder.init(box2DWorld, engine, TEXTURE_ATLAS, worldCamera, assetManager);
 		BodyBuilder.init(box2DWorld);
 
 		initEntities();//abstract
@@ -269,7 +271,7 @@ public abstract class Core {
 	public void resume() {}
 
 	public void dispose(){
-		textureAtlas.dispose();
+		TEXTURE_ATLAS.dispose();
 		if (box2DWorld != null) {
 			box2DWorld.dispose();
 		}
