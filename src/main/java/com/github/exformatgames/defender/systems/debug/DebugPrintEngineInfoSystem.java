@@ -29,7 +29,7 @@ public class DebugPrintEngineInfoSystem extends IteratingSystem {
         this.viewport = viewport;
 
         bitmapFont = new BitmapFont(Gdx.files.internal("debug-font.fnt"));
-        bitmapFont.getData().setScale(2);
+        //bitmapFont.getData().setScale(2);
         bitmapFont.setColor(Color.GREEN);
     }
 
