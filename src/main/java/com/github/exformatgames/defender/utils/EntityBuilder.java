@@ -19,22 +19,32 @@ public abstract class EntityBuilder {
 	protected static OrthographicCamera camera;
 	protected static AssetManager assetManager;
 
-	protected static BodyDef BODY_DEF = new BodyDef();
-	protected static FixtureDef FIXTURE_DEF = new FixtureDef();
+	protected static BodyDef BODY_DEF;
+	protected static FixtureDef FIXTURE_DEF;
 
-	protected static CircleShape CIRCLE_SHAPE = new CircleShape();
-	protected static PolygonShape POLYGON_SHAPE = new PolygonShape();
-	protected static ChainShape CHAIN_SHAPE = new ChainShape();
-	protected static EdgeShape EDGE_SHAPE = new EdgeShape();
+	protected static CircleShape CIRCLE_SHAPE;
+	protected static PolygonShape POLYGON_SHAPE;
+	protected static ChainShape CHAIN_SHAPE;
+	protected static EdgeShape EDGE_SHAPE;
 
 	private final static Vector2 zeroVector = new Vector2();
 	
-	public static void init(World w, PooledEngine e, TextureAtlas a, OrthographicCamera c, AssetManager am){
-		EntityBuilder.world = w;
-		EntityBuilder.engine = e;
-		EntityBuilder.textureAtlas = a;
-		EntityBuilder.camera = c;
-		EntityBuilder.assetManager = am;
+	public static void init(World world, PooledEngine engine, TextureAtlas textureAtlas, OrthographicCamera camera, AssetManager assetManager){
+
+		if (world != null) {
+			BODY_DEF = new BodyDef();
+			FIXTURE_DEF = new FixtureDef();
+			CIRCLE_SHAPE = new CircleShape();
+			POLYGON_SHAPE = new PolygonShape();
+			CHAIN_SHAPE = new ChainShape();
+			EDGE_SHAPE = new EdgeShape();
+		}
+
+		EntityBuilder.world = world;
+		EntityBuilder.engine = engine;
+		EntityBuilder.textureAtlas = textureAtlas;
+		EntityBuilder.camera = camera;
+		EntityBuilder.assetManager = assetManager;
 	}
 
 	protected Entity entity;
