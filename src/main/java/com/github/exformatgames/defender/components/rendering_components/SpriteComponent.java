@@ -6,11 +6,12 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import com.github.exformatgames.defender.Configurations;
+import com.github.exformatgames.defender.Core;
 
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.*;
 
 public class SpriteComponent implements Component {
-	
+
 	public Texture texture;
 
 	public final Array<SpriteComponent> spriteComponentArray = new Array<>();
@@ -33,18 +34,21 @@ public class SpriteComponent implements Component {
 	
 	private Rectangle bounds;
 
-	public SpriteComponent init(TextureRegion region, float scl) {
-		texture = region.getTexture();
-		setUV(region);
-		setColor(1, 1, 1, 1);		
-		setSize((float) region.getRegionWidth() * scl, (float) region.getRegionHeight() * scl);
-		setOrigin(width / 2, height / 2);
-		setOffsetXY(0, 0);
-		return this;
+
+	public SpriteComponent init(String name, int index, float scl) {
+		TextureRegion region = Core.TEXTURE_ATLAS.findRegion(name, index);
+		return init(region, scl);
+	}
+	public SpriteComponent init(String name, int index) {
+		return init(name, index, Configurations.SCL);
 	}
 
-	public SpriteComponent init(TextureRegion region) {
-		return init(region, Configurations.SCL);
+	public SpriteComponent init(String name, float scl) {
+		TextureRegion region = Core.TEXTURE_ATLAS.findRegion(name);
+		return init(region, scl);
+	}
+	public SpriteComponent init(String name) {
+		return init(name, Configurations.SCL);
 	}
 
 	public SpriteComponent init(TextureRegion region, float scl, float offsetX, float offsetY) {
@@ -120,7 +124,10 @@ public class SpriteComponent implements Component {
 
 		return this;
 	}
+
 	public SpriteComponent setUV(TextureRegion region){
+		this.texture = region.getTexture();
+
 		float[] vertices = SpriteComponent.this.vertices;		
 		vertices[U1] = region.getU();		
 		vertices[V1] = region.getV2(); 		
