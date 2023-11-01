@@ -19,6 +19,9 @@ public class Configurations {
 			Input.Buttons.FORWARD, Input.Buttons.BACK
 	});
 
+	public static float GLOBAL_SOUND_VOLUME = 1; //TODO 0-1
+	public static float GLOBAL_MUSIC_VOLUME = 1; //TODO 0-1
+
 	public static float DIVIDER = 100;
 	public static float SCL = 0.01f;
 
