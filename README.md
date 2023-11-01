@@ -1,3 +1,6 @@
+[![](https://jitpack.io/v/exformatgames/defender.svg)](https://jitpack.io/#exformatgames/defender)
+
+
 Defender. A small add-on for ECS Ashley.
 
 Implements the minimum required to be set of components and systems for developing 2D games.
