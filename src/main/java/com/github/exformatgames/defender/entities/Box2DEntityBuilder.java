@@ -7,6 +7,6 @@ public class Box2DEntityBuilder extends EntityBuilder {
 
     @Override
     public void create() {
-        createComponent(WorldComponent.class).init(world);
+        addComponent(WorldComponent.class).init(world);
     }
 }

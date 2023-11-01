@@ -2,6 +2,7 @@ package com.github.exformatgames.defender.systems.audio_systems;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.systems.*;
+import com.github.exformatgames.defender.Configurations;
 import com.github.exformatgames.defender.components.audio_components.MusicComponent;
 
 public class MusicSystem extends IteratingSystem {
@@ -15,10 +16,8 @@ public class MusicSystem extends IteratingSystem {
         MusicComponent component = MusicComponent.getComponent(entity);
 
         if (component.music != null) {
-
-
-            if (component.music.getVolume() != component.volume) {
-                component.music.setVolume(component.volume);
+            if (component.music.getVolume() != component.volume * Configurations.GLOBAL_MUSIC_VOLUME) {
+                component.music.setVolume(component.volume * Configurations.GLOBAL_MUSIC_VOLUME);
             }
 
             if (component.remove) {

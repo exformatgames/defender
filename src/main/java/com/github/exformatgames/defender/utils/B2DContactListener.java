@@ -12,8 +12,8 @@ public class B2DContactListener implements ContactListener {
         Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureB().getBody();
 
-        EntityBuilder.createComponent((Entity) a.getUserData(), BeginContactComponent.class).init((Entity) b.getUserData(), b, contact, b.getFixtureList().first().getFilterData().categoryBits);
-        EntityBuilder.createComponent((Entity) b.getUserData(), BeginContactComponent.class).init((Entity) a.getUserData(), a, contact, a.getFixtureList().first().getFilterData().categoryBits);
+        EntityBuilder.addComponent((Entity) a.getUserData(), BeginContactComponent.class).init((Entity) b.getUserData(), b, contact, b.getFixtureList().first().getFilterData().categoryBits);
+        EntityBuilder.addComponent((Entity) b.getUserData(), BeginContactComponent.class).init((Entity) a.getUserData(), a, contact, a.getFixtureList().first().getFilterData().categoryBits);
     }
 
     @Override
@@ -21,8 +21,8 @@ public class B2DContactListener implements ContactListener {
         Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureB().getBody();
 
-        EntityBuilder.createComponent((Entity) a.getUserData(), EndContactComponent.class).init((Entity) b.getUserData(), contact, b.getFixtureList().first().getFilterData().categoryBits);
-        EntityBuilder.createComponent((Entity) b.getUserData(), EndContactComponent.class).init((Entity) a.getUserData(), contact, a.getFixtureList().first().getFilterData().categoryBits);
+        EntityBuilder.addComponent((Entity) a.getUserData(), EndContactComponent.class).init((Entity) b.getUserData(), contact, b.getFixtureList().first().getFilterData().categoryBits);
+        EntityBuilder.addComponent((Entity) b.getUserData(), EndContactComponent.class).init((Entity) a.getUserData(), contact, a.getFixtureList().first().getFilterData().categoryBits);
     }
 
     @Override
