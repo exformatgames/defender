@@ -20,13 +20,13 @@ public class SoundSystem extends IteratingSystem {
 			component.isPlaying = true;
 			component.play = false;
 
-			component.ID = component.sound.play(component.volume * Configurations.GLOBAL_MUSIC_VOLUME);
+			component.ID = component.sound.play(component.volume * Configurations.GLOBAL_SOUND_VOLUME);
 			
-			component.sound.setPan(component.ID, component.pan, component.volume * Configurations.GLOBAL_MUSIC_VOLUME);
+			component.sound.setPan(component.ID, component.pan, component.volume * Configurations.GLOBAL_SOUND_VOLUME);
 			component.sound.setLooping(component.ID, component.isLooping);
 		} else {
-			component.sound.setVolume(component.ID, component.volume * Configurations.GLOBAL_MUSIC_VOLUME);
-			component.sound.setPan(component.ID, component.pan, component.volume * Configurations.GLOBAL_MUSIC_VOLUME);
+			component.sound.setVolume(component.ID, component.volume * Configurations.GLOBAL_SOUND_VOLUME);
+			component.sound.setPan(component.ID, component.pan, component.volume * Configurations.GLOBAL_SOUND_VOLUME);
 		}
 	}
 }
