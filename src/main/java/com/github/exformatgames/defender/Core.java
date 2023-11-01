@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.math.*;
+import com.github.exformatgames.defender.assets.Assets;
 import com.github.exformatgames.defender.systems.debug.*;
 import com.github.exformatgames.defender.systems.util_system.*;
 import com.github.exformatgames.defender.entities.Box2DEntityBuilder;
@@ -40,8 +41,7 @@ public abstract class Core {
 
 	protected SpriteBatch spriteBatch;
 	protected InputMultiplexer inputMultiplexer;
-
-	public static TextureAtlas TEXTURE_ATLAS;
+	public static Assets ASSETS;
 	protected AssetManager assetManager;
 
 	private final PooledEngine engine;
@@ -54,8 +54,8 @@ public abstract class Core {
 	private DebugSpriteSystem debugSpriteSystem;
 	private DebugPrintEngineInfoSystem debugPrintEngineInfoSystem;
 
-	public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
-		TEXTURE_ATLAS = textureAtlas;
+	public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, final Assets assets) {
+		ASSETS = assets;
 
 		worldViewport = new ExtendViewport(worldViewportSize.x, worldViewportSize.y);
 		worldViewport.apply(true);
@@ -71,27 +71,27 @@ public abstract class Core {
 		}
 		this.spriteBatch = new SpriteBatch();
 		this.inputMultiplexer = inputMultiplexer;
-		this.assetManager = assetManager;
+		this.assetManager = assets.getAssetManager();
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
 
 		engine = new PooledEngine(50, 500, 50, 5000);
 	}
 
-	public Core(Vector2 viewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
-		this(viewportSize, viewportSize, gravity, inputMultiplexer, textureAtlas, assetManager);
+	public Core(Vector2 viewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, Assets assets) {
+		this(viewportSize, viewportSize, gravity, inputMultiplexer, assets);
 	}
 
-	public Core(Vector2 gravity, InputMultiplexer inputMultiplexer, TextureAtlas textureAtlas, AssetManager assetManager) {
-		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), gravity, inputMultiplexer, textureAtlas, assetManager);
+	public Core(Vector2 gravity, InputMultiplexer inputMultiplexer, Assets assets) {
+		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), gravity, inputMultiplexer, assets);
 	}
 
-	public Core(Vector2 gravity, TextureAtlas textureAtlas, AssetManager assetManager) {
-		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), gravity, new InputMultiplexer(), textureAtlas, assetManager);
+	public Core(Vector2 gravity, Assets assets) {
+		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), gravity, new InputMultiplexer(), assets);
 	}
 
-	public Core(TextureAtlas textureAtlas, AssetManager assetManager) {
-		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), null, new InputMultiplexer(), textureAtlas, assetManager);
+	public Core(Assets assets) {
+		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), null, new InputMultiplexer(), assets);
 	}
 
 	protected abstract void initEntities();
@@ -104,7 +104,7 @@ public abstract class Core {
 	public final void create(boolean isDebug){
 		Configurations.VIEWPORTS_RATIO = Configurations.UI_HEIGHT / Configurations.WORLD_HEIGHT;
 
-		EntityBuilder.init(box2DWorld, engine, TEXTURE_ATLAS, worldCamera, assetManager);
+		EntityBuilder.init(box2DWorld, engine, ASSETS, worldCamera);
 		BodyBuilder.init(box2DWorld);
 
 		initEntities();//abstract
@@ -272,11 +272,12 @@ public abstract class Core {
 	public void resume() {}
 
 	public void dispose(){
-		TEXTURE_ATLAS.dispose();
+		ASSETS.getTextureAtlas().dispose();
 		if (box2DWorld != null) {
 			box2DWorld.dispose();
 		}
 		assetManager.dispose();
+		ASSETS = null;
 	}
 
 	public Core debugOn() {

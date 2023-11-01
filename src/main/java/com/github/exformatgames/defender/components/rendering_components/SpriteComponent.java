@@ -36,7 +36,7 @@ public class SpriteComponent implements Component {
 
 
 	public SpriteComponent init(String name, int index, float scl) {
-		TextureRegion region = Core.TEXTURE_ATLAS.findRegion(name, index);
+		TextureRegion region = Core.ASSETS.getTextureAtlas().findRegion(name, index);
 		return init(region, scl);
 	}
 	public SpriteComponent init(String name, int index) {
@@ -44,7 +44,7 @@ public class SpriteComponent implements Component {
 	}
 
 	public SpriteComponent init(String name, float scl) {
-		TextureRegion region = Core.TEXTURE_ATLAS.findRegion(name);
+		TextureRegion region = Core.ASSETS.getRegion(name);
 		return init(region, scl);
 	}
 	public SpriteComponent init(String name) {
