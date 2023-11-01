@@ -42,9 +42,13 @@ public class GestureInputSystem extends EventSystem {
 
 
     public GestureInputSystem(InputMultiplexer inputMultiplexer, Camera camera) {
-        super(Family.one(GestureTapComponent.class, GesturePanComponent.class,
-                GestureLongPressComponent.class, GestureZoomComponent.class,
-                GestureRotateComponent.class, GestureFlingComponent.class).get());
+        super(Family.one(
+                GestureTapComponent.class,
+                GesturePanComponent.class,
+                GestureLongPressComponent.class,
+                GestureZoomComponent.class,
+                GestureRotateComponent.class,
+                GestureFlingComponent.class).get());
 
         new InputGestures(inputMultiplexer);
         this.camera = camera;
@@ -163,8 +167,6 @@ public class GestureInputSystem extends EventSystem {
 
                 break;
             }
-            default:
-                break;
         }
     }
 

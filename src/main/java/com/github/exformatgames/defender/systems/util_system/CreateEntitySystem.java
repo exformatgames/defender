@@ -25,9 +25,6 @@ public class CreateEntitySystem extends IteratingSystem {
                 
                 if ( ! component.position.isZero()) {
                     component.entityBuilder.create(component.position);
-                } 
-                else if (component.json != null) {
-                    component.entityBuilder.create(component.json);
                 }
                 else {
                     component.entityBuilder.create();
