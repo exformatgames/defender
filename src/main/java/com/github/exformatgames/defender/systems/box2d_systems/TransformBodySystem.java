@@ -18,6 +18,7 @@ public class TransformBodySystem extends IteratingSystem {
 
         bodyComponent.body.setTransform(transform.position, transform.angle);
         bodyComponent.body.setAngularVelocity(transform.angularVelocity);
+        bodyComponent.body.setLinearVelocity(transform.linearVelocity);
         bodyComponent.body.setAwake(transform.awake);
 
         entity.remove(TransformBodyComponent.class);
