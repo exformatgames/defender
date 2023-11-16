@@ -142,7 +142,7 @@ public abstract class Core {
 	private void initInputSystems(){
 		engine.addSystem(new GestureInputSystem(inputMultiplexer, worldCamera));
 		engine.addSystem(new KeyboardInputSystem());
-		engine.addSystem(new MouseInputSystem(worldCamera));
+		engine.addSystem(new MouseInputSystem(inputMultiplexer, worldCamera));
 	}
 	
 	private void initBox2DSystems(){

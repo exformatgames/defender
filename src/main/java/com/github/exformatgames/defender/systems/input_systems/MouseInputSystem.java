@@ -4,7 +4,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.github.exformatgames.defender.Configurations;
@@ -21,8 +24,10 @@ public class MouseInputSystem extends IteratingSystem {
 
     private final OrthographicCamera camera;
 
-    public MouseInputSystem(OrthographicCamera camera) {
+    public MouseInputSystem(InputMultiplexer inputMultiplexer, OrthographicCamera camera) {
         super(Family.one(ButtonPressedComponent.class, ButtonJustPressedComponent.class).get());
+
+        new InputMouse(inputMultiplexer);
 
         this.camera = camera;
         if (Configurations.TARGET_BUTTONS.isEmpty()){
@@ -69,4 +74,60 @@ public class MouseInputSystem extends IteratingSystem {
             justPressedComponent.mousePosition.set(mousePosition.x, mousePosition.y);
         }
     }
+
+    private class InputMouse implements InputProcessor {
+
+        public InputMouse(InputMultiplexer inputMultiplexer) {
+            inputMultiplexer.addProcessor(this);
+        }
+        @Override
+        public boolean keyDown(int keycode) {
+            return false;
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+            return false;
+        }
+
+        @Override
+        public boolean keyTyped(char character) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDragged(int screenX, int screenY, int pointer) {
+            return false;
+        }
+
+        @Override
+        public boolean mouseMoved(int screenX, int screenY) {
+
+            mousePosition.set(screenX, screenY, 0);
+            camera.unproject(mousePosition);
+            return false;
+        }
+
+        @Override
+        public boolean scrolled(float amountX, float amountY) {
+            return false;
+        }
+    }
 }
+
+
