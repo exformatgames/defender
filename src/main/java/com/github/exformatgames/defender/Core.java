@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.math.*;
@@ -61,7 +62,7 @@ public abstract class Core {
 		worldViewport = new ScalingViewport(Scaling.fill, worldViewportSize.x, worldViewportSize.y);
 		worldViewport.apply(true);
 
-		uiViewport = new ScalingViewport(Scaling.fill, uiViewportSize.x, uiViewportSize.y);
+		uiViewport = new FillViewport(uiViewportSize.x, uiViewportSize.y);
 		uiViewport.apply(true);
 
 		this.worldCamera = (OrthographicCamera) worldViewport.getCamera();
@@ -142,7 +143,7 @@ public abstract class Core {
 	private void initInputSystems(){
 		engine.addSystem(new GestureInputSystem(inputMultiplexer, worldCamera));
 		engine.addSystem(new KeyboardInputSystem());
-		engine.addSystem(new MouseInputSystem(worldCamera));
+		engine.addSystem(new MouseInputSystem(inputMultiplexer, worldCamera));
 	}
 	
 	private void initBox2DSystems(){
