@@ -37,8 +37,8 @@ public class MouseInputSystem extends IteratingSystem {
 
     @Override
     public void startProcessing() {
-        mousePosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-        camera.unproject(mousePosition);
+        //mousePosition.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+        //camera.unproject(mousePosition);
 
         pressedButtons.clear();
         justPressedButtons.clear();
