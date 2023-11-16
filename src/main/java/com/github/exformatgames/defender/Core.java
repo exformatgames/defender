@@ -7,7 +7,8 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.math.*;
 import com.github.exformatgames.defender.assets.Assets;
@@ -47,7 +48,7 @@ public abstract class Core {
 	private final PooledEngine engine;
 
 	private boolean debug = false;
-	private ShapeRenderer debugShapeRenderer = new ShapeRenderer();
+	private ShapeRenderer debugShapeRenderer;
 	private DebugRayCastSystem debugRayCastSystem;
 	private DebugPhysicsSystem debugPhysicsSystem;
 	private DebugShapesSystem debugShapesSystem;
@@ -57,10 +58,10 @@ public abstract class Core {
 	public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, final Assets assets) {
 		ASSETS = assets;
 
-		worldViewport = new ExtendViewport(worldViewportSize.x, worldViewportSize.y);
+		worldViewport = new ScalingViewport(Scaling.fill, worldViewportSize.x, worldViewportSize.y);
 		worldViewport.apply(true);
 
-		uiViewport = new ExtendViewport(uiViewportSize.x, uiViewportSize.y);
+		uiViewport = new ScalingViewport(Scaling.fill, uiViewportSize.x, uiViewportSize.y);
 		uiViewport.apply(true);
 
 		this.worldCamera = (OrthographicCamera) worldViewport.getCamera();
@@ -128,6 +129,7 @@ public abstract class Core {
 		
 		if(isDebug) {
 			this.debug = true;
+			debugShapeRenderer = new ShapeRenderer();
 			addDebugSystems();
 		}
 
