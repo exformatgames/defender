@@ -6,41 +6,66 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.exformatgames.defender.Configurations;
 import com.github.exformatgames.defender.components.input_components.MouseComponent;
 import com.github.exformatgames.defender.components.input_components.button_event_components.ButtonJustPressedComponent;
 import com.github.exformatgames.defender.components.input_components.button_event_components.ButtonPressedComponent;
-import com.github.exformatgames.defender.systems.util_system.EventSystem;
 
-public class MouseInputSystem extends EventSystem {
+public class MouseInputSystem extends IteratingSystem {
 
-    private final Vector3 mousePosition = new Vector3();
+    private final Array<Integer> pressedButtons = new Array<>();
+    private final Array<Integer> justPressedButtons = new Array<>();
+    private final Vector2 mousePosition = new Vector2();
 
     private final Viewport viewport;
     public MouseInputSystem(InputMultiplexer inputMultiplexer, Viewport viewport) {
-        super(Family.one(ButtonPressedComponent.class, ButtonJustPressedComponent.class).get());
+        super(Family.one(MouseComponent.class, ButtonPressedComponent.class, ButtonJustPressedComponent.class).get());
 
         this.viewport = viewport;
+
+        if (Configurations.TARGET_BUTTONS.isEmpty()) {
+            Configurations.TARGET_BUTTONS.addAll(Configurations.DEFAULT_BUTTONS);
+        }
 
         new InputMouse(inputMultiplexer);
     }
 
 
     @Override
-    public void update() {
-        super.update();
+    public void startProcessing() {
+        pressedButtons.clear();
+        justPressedButtons.clear();
+
+        for (int i = 0; i < Configurations.TARGET_BUTTONS.size; i++) {
+            int key = Configurations.TARGET_BUTTONS.get(i);
+            if (Gdx.input.isButtonPressed(key)) {
+                pressedButtons.add(key);
+            }
+            if (Gdx.input.isButtonJustPressed(key)) {
+                justPressedButtons.add(key);
+            }
+        }
     }
 
     @Override
-    protected void processEntity(Entity entity) {
+    protected void processEntity(Entity entity, float dt) {
         MouseComponent mouseComponent = MouseComponent.getComponent(entity);
+        ButtonPressedComponent buttonPressedComponent = ButtonPressedComponent.getComponent(entity);
+        ButtonJustPressedComponent buttonJustPressedComponent = ButtonJustPressedComponent.getComponent(entity);
 
         mouseComponent.position.set(mousePosition.x, mousePosition.y);
+        if (buttonPressedComponent != null) {
+            buttonPressedComponent.buttons.clear();
+            buttonPressedComponent.buttons.addAll(pressedButtons);
+        }
+
+        if (buttonJustPressedComponent != null) {
+            buttonJustPressedComponent.buttons.clear();
+            buttonJustPressedComponent.buttons.addAll(justPressedButtons);
+        }
     }
 
     private class InputMouse implements InputProcessor {
@@ -80,16 +105,17 @@ public class MouseInputSystem extends EventSystem {
 
         @Override
         public boolean touchDragged(int screenX, int screenY, int pointer) {
+            mousePosition.set(screenX, screenY);
+            viewport.unproject(mousePosition);
             return false;
         }
 
         @Override
         public boolean mouseMoved(int screenX, int screenY) {
-
-            mousePosition.set(screenX, screenY, 0);
+            mousePosition.set(screenX, screenY);
             viewport.unproject(mousePosition);
-            update();
-            return false;
+
+            return true;
         }
 
         @Override
