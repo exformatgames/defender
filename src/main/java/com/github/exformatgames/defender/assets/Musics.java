@@ -1,10 +1,11 @@
 package com.github.exformatgames.defender.assets;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Array;
 
 public class Musics {
-	
+
 	private Array<Music> musics = new Array<>();
 	private Array<String> musicNames = new Array<>();
 
@@ -22,4 +23,10 @@ public class Musics {
 		}
 		return null;
 	}
+
+    public void dispose() {
+        for (Music music: musics) {
+            music.dispose();
+        }
+    }
 }

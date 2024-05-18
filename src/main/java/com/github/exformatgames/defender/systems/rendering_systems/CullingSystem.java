@@ -1,40 +1,54 @@
 package com.github.exformatgames.defender.systems.rendering_systems;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.systems.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.math.*;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.exformatgames.defender.Configurations;
 import com.github.exformatgames.defender.components.rendering_components.CullingComponent;
 import com.github.exformatgames.defender.components.rendering_components.SpriteComponent;
 
 public class CullingSystem extends IteratingSystem {
 
-    private final OrthographicCamera camera;
+    private final Viewport viewport;
 
     private final Rectangle cameraBounds;
 
-    public CullingSystem(OrthographicCamera camera) {
+    public CullingSystem(Viewport viewport) {
         super(Family.all(CullingComponent.class).get());
-        this.camera = camera;
+
+        this.viewport = viewport;
 
         cameraBounds = new Rectangle();
-        cameraBounds.x = camera.position.x;
-        cameraBounds.y = camera.position.y;
-        cameraBounds.width = camera.viewportWidth;
-        cameraBounds.height = camera.viewportHeight;
+        cameraBounds.x = viewport.getCamera().position.x;
+        cameraBounds.y = viewport.getCamera().position.y;
+        cameraBounds.width = viewport.getCamera().viewportWidth;
+        cameraBounds.height = viewport.getCamera().viewportHeight;
     }
 
     @Override
-    public void update(float deltaTime) {
-        float viewportHalfWidth = camera.viewportWidth / 2;
-        float viewportHalfHeight = camera.viewportHeight / 2;
+    public void startProcessing() {
+        float realViewportWidth = (float) viewport.getScreenWidth() - (Math.abs(viewport.getLeftGutterWidth()) * 2);
+        float realViewportHeight = (float) viewport.getScreenHeight() - (Math.abs(viewport.getBottomGutterHeight()) * 2);
 
-        cameraBounds.x = camera.position.x - viewportHalfWidth;
-        cameraBounds.y = camera.position.y - viewportHalfHeight;
-        cameraBounds.width = camera.viewportWidth;
-        cameraBounds.height = camera.viewportHeight;
+        float widthRatio = (float) viewport.getScreenWidth() / Configurations.WORLD_WIDTH;
+        float heightRatio = (float) viewport.getScreenHeight() / Configurations.WORLD_HEIGHT;
 
-        super.update(deltaTime);
+        float realWorldWidth = realViewportWidth / widthRatio;
+        float halfRealWorldWidth = realWorldWidth / 2;
+
+        float realWorldHeight = realViewportHeight / heightRatio;
+        float halfRealWorldHeight = realWorldHeight / 2;
+
+        float leftEdge = Configurations.WORLD_WIDTH / 2 - halfRealWorldWidth;
+
+        float bottomEdge = Configurations.WORLD_HEIGHT / 2 - halfRealWorldHeight;
+
+        cameraBounds.x = leftEdge;
+        cameraBounds.y = bottomEdge;
+        cameraBounds.width = realWorldWidth;
+        cameraBounds.height = realWorldHeight;
     }
 
     @Override

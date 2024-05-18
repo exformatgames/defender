@@ -3,13 +3,14 @@ package com.github.exformatgames.defender.components.transform_components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Pool;
 
 /**
  * 2023
  * @author exformat
  */
 
-public class ScaleLoopComponent implements Component {
+public class ScaleLoopComponent implements Component, Pool.Poolable {
 
     public float minX = 0;
     public float maxX = 2;
@@ -21,6 +22,18 @@ public class ScaleLoopComponent implements Component {
 
     public float timerX = 0;
     public float timerY = 0;
+
+    @Override
+    public void reset() {
+        minX = 0;
+        maxX = 2;
+        minY = 0;
+        maxY = 2;
+        frequencyX = 10;
+        frequencyY = 10;
+        timerX = 0;
+        timerY = 0;
+    }
 
     /**
      *

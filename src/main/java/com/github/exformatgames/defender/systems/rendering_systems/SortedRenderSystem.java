@@ -1,15 +1,16 @@
 package com.github.exformatgames.defender.systems.rendering_systems;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.systems.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.SortedIteratingSystem;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.exformatgames.defender.components.box2d.B2DParticleEmitterComponent;
 import com.github.exformatgames.defender.components.rendering_components.*;
-import com.github.exformatgames.defender.utils.ZComparator;
 import com.github.exformatgames.defender.utils.Uniform;
+import com.github.exformatgames.defender.utils.ZComparator;
 
 public class SortedRenderSystem extends SortedIteratingSystem {
 
@@ -32,7 +33,7 @@ public class SortedRenderSystem extends SortedIteratingSystem {
     public void startProcessing() {
         startTime = TimeUtils.nanoTime();
 
-        viewport.apply(true);
+        viewport.apply(false);
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -59,7 +60,6 @@ public class SortedRenderSystem extends SortedIteratingSystem {
 
             for (int i = 0; i < spriteComponent.spriteComponentArray.size; i++) {
                 SpriteComponent sprite = spriteComponent.spriteComponentArray.get(i);
-
                 batch.draw(sprite.texture, sprite.getVertices(), 0, SpriteComponent.SPRITE_SIZE);
             }
         }

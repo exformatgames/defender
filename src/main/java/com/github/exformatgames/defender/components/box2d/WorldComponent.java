@@ -1,7 +1,9 @@
 package com.github.exformatgames.defender.components.box2d;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class WorldComponent implements Component {
 

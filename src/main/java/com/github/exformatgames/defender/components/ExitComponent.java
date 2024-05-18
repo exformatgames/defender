@@ -1,5 +1,8 @@
 package com.github.exformatgames.defender.components;
-import com.badlogic.ashley.core.*;
+
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 
 public class ExitComponent implements Component {
 

@@ -25,6 +25,9 @@ public class DebugPrintEngineInfoSystem extends IteratingSystem {
     private float avgFPS = 0;
     private int avgFPSCounter = 0;
 
+    private float avgFPSprint = 0;
+
+
     public DebugPrintEngineInfoSystem(SpriteBatch spriteBatch, Viewport viewport) {
         super(Family.all().get());
         this.spriteBatch = spriteBatch;
@@ -50,15 +53,18 @@ public class DebugPrintEngineInfoSystem extends IteratingSystem {
         }
 
         int FPS = (int)(1 / deltaTime);
-        avgFPS += FPS;
+        avgFPS += deltaTime;
         avgFPSCounter++;
-        if (avgFPSCounter < 0) {
-            avgFPSCounter = 1;
-            avgFPS = FPS;
+
+        if (avgFPS > 0.5f) {
+            avgFPSprint = (int)(1 / (avgFPS / avgFPSCounter));
+
+            avgFPS = 0;
+            avgFPSCounter = 0;
         }
 
         String info = "FPS: " + FPS
-                + "\nawg FPS: " + avgFPS / avgFPSCounter
+                + "\nawg FPS: " + avgFPSprint
                 + "\nentities: " + entities
                 + "\ncomponents: " + components;
 

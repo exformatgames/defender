@@ -6,7 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class TextRenderComponent implements Component {
-    
+
     public BitmapFont bitmapFont = null;
     public String text = "";
 
@@ -28,7 +28,7 @@ public class TextRenderComponent implements Component {
 
     private final static ComponentMapper<TextRenderComponent> mapper = ComponentMapper.getFor(TextRenderComponent.class);
 
-    public static TextRenderComponent getComponent(Entity entity) {        
+    public static TextRenderComponent getComponent(Entity entity) {
         return mapper.get(entity);
     }
 }

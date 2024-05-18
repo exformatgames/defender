@@ -1,15 +1,16 @@
 package com.github.exformatgames.defender.systems.debug;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.systems.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.glutils.*;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class DebugLightSystem extends IteratingSystem {
 
 	private final OrthographicCamera camera;
 	private final ShapeRenderer ren;
-	
+
 
 
 	public DebugLightSystem(OrthographicCamera camera, int priority){
@@ -24,13 +25,13 @@ public class DebugLightSystem extends IteratingSystem {
 
 
 		ren.setProjectionMatrix(camera.combined);
-		
+
 	}
 
 
 
 	@Override
 	protected void processEntity(Entity entity, float dt) {
-		
+
 	}
 }

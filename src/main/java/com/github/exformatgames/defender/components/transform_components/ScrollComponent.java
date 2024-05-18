@@ -1,11 +1,13 @@
 package com.github.exformatgames.defender.components.transform_components;
 
-import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 
 public class ScrollComponent implements Component {
 	public float moveByX = 0;
 	public float moveByY = 0;
-	
+
 	public boolean horizontal = false;
 	public boolean vertical = false;
 

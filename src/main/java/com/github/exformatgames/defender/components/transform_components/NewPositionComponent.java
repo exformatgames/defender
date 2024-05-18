@@ -1,6 +1,8 @@
 package com.github.exformatgames.defender.components.transform_components;
 
-import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 
 public class NewPositionComponent implements Component {
 	public float x = 0;
@@ -12,7 +14,7 @@ public class NewPositionComponent implements Component {
 
 		return this;
 	}
-	
+
 	private final static ComponentMapper<NewPositionComponent> mapper = ComponentMapper.getFor(NewPositionComponent.class);
 
 	public static NewPositionComponent getComponent(Entity entity) {

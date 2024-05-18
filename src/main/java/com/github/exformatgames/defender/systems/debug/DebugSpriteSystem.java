@@ -1,15 +1,16 @@
 package com.github.exformatgames.defender.systems.debug;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.systems.*;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.*;
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.exformatgames.defender.Configurations;
 import com.github.exformatgames.defender.components.rendering_components.SpriteComponent;
 import com.github.exformatgames.defender.components.util_components.DebugComponent;
 
@@ -41,7 +42,7 @@ public class DebugSpriteSystem extends IteratingSystem {
 
     @Override
     public void startProcessing() {
-        worldViewport.apply(true);
+        worldViewport.apply();
         shapeRenderer.setProjectionMatrix(worldCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.CORAL);
@@ -63,14 +64,17 @@ public class DebugSpriteSystem extends IteratingSystem {
             shapeRenderer.setColor(Color.WHITE);
             shapeRenderer.circle(sprite.x + sprite.originX, sprite.y + sprite.originY, 0.05f, 20);
 
-            uiViewport.apply(true);
-            spriteBatch.setProjectionMatrix(uiCamera.combined);
-            spriteBatch.begin();
-            String template = "x:%.2f y:%.2f a:%.2f";
-            bitmapFont.draw(spriteBatch, String.format(template, sprite.x + sprite.offsetX, sprite.y + sprite.offsetY, sprite.rotation)
-                    , (sprite.x + sprite.offsetX) * Configurations.VIEWPORTS_RATIO
-                    , (sprite.y + sprite.offsetY) * Configurations.VIEWPORTS_RATIO);
-            spriteBatch.end();
+            //uiViewport.apply(true);
+            //spriteBatch.setProjectionMatrix(uiCamera.combined);
+            //spriteBatch.begin();
+            //String template = "x:%.2f y:%.2f a:%.2f";
+            //String text = "x: " + sprite.x +  + sprite.offsetX + " y: " + sprite.y + sprite.offsetY + " a: " + sprite.rotation;
+            //bitmapFont.draw(
+            //    spriteBatch
+            //    , text//, String.format(template, sprite.x + sprite.offsetX, sprite.y + sprite.offsetY, sprite.rotation)
+            //    , (sprite.x + sprite.offsetX) * Configurations.VIEWPORTS_RATIO
+            //    , (sprite.y + sprite.offsetY) * Configurations.VIEWPORTS_RATIO);
+            //spriteBatch.end();
         }
     }
 }

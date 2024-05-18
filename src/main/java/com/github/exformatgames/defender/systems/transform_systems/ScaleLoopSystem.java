@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.github.exformatgames.defender.components.transform_components.ScaleComponent;
 import com.github.exformatgames.defender.components.transform_components.ScaleLoopComponent;
+import com.github.exformatgames.defender.utils.EntityBuilder;
 
 public class ScaleLoopSystem extends IteratingSystem {
 
@@ -25,8 +26,7 @@ public class ScaleLoopSystem extends IteratingSystem {
         float sinY = MathUtils.sin(scaleLoopComponent.timerY * scaleLoopComponent.frequencyY) + 3.14f / 2;
 
         if (scaleComponent == null) {
-            scaleComponent = getEngine().createComponent(ScaleComponent.class);
-            entity.add(scaleComponent);
+            scaleComponent = EntityBuilder.addComponent(entity, ScaleComponent.class);
         }
 
         scaleComponent.toX = MathUtils.map(0, 3.14f, scaleLoopComponent.minX, scaleLoopComponent.maxX, sinX);

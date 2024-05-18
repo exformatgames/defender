@@ -1,21 +1,27 @@
 package com.github.exformatgames.defender.assets;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 
 public class Assets {
-	
+
 	private AssetManager assetManager;
 	private BitmapFonts bitmapFonts;
 	private Musics musics;
 	private Sounds sounds;
 	private TextureAtlas textureAtlas;
 
-	public void setAssetManager(AssetManager assetManager) {
+    private Skin skin;
+
+
+    public void setAssetManager(AssetManager assetManager) {
 		this.assetManager = assetManager;
 	}
 
@@ -30,7 +36,7 @@ public class Assets {
 	public BitmapFonts getBitmapFonts() {
 		return bitmapFonts;
 	}
-	
+
 	public void setMusics(Musics musics) {
 		this.musics = musics;
 	}
@@ -54,11 +60,26 @@ public class Assets {
 	public TextureAtlas getTextureAtlas() {
 		return textureAtlas;
 	}
-	
+
 	//====================
 	public TextureRegion getRegion(String name) {
 		return textureAtlas.findRegion(name);
 	}
+    public TextureRegion getRegion(String name, int index) {
+        return textureAtlas.findRegion(name, index);
+    }
+    public Array<TextureAtlas.AtlasRegion> getRegions(String name) {
+        return textureAtlas.findRegions(name);
+    }
+
+    public Animation<TextureRegion> getAnimation(String name, float frameDuration) {
+        return new Animation<TextureRegion>(frameDuration, getRegions(name));
+    }
+
+    public Animation<TextureRegion> getAnimation(String name, float frameDuration, Animation.PlayMode playMode) {
+        return new Animation<TextureRegion>(frameDuration, getRegions(name), playMode);
+    }
+
 	public Music getMusic(String name) {
 		return musics.get(name);
 	}
@@ -68,4 +89,20 @@ public class Assets {
 	public BitmapFont getBitmapFont(String name) {
 		return bitmapFonts.get(name);
 	}
+
+    public Skin getSkin() {
+        return skin;
+    }
+
+    public void setSkin(Skin skin) {
+        this.skin = skin;
+    }
+
+    public void dispose() {
+        assetManager.dispose();
+        bitmapFonts.dispose();
+        musics.dispose();
+        sounds.dispose();
+        textureAtlas.dispose();
+    }
 }

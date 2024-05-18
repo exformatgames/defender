@@ -17,12 +17,12 @@ public class CreateEntitySystem extends IteratingSystem {
 
         component.timer += deltaTime;
 
-        if (component.count > 0) {
+        if (component.count > 0 || component.infinityCount) {
             if (component.timer > component.interval) {
-                
+
                 component.timer = 0;
                 component.count--;
-                
+
                 if ( ! component.position.isZero()) {
                     component.entityBuilder.create(component.position);
                 }

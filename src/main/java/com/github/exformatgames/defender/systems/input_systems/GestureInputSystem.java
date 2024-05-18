@@ -4,15 +4,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.exformatgames.defender.Configurations;
-import com.github.exformatgames.defender.systems.util_system.EventSystem;
 import com.github.exformatgames.defender.components.input_components.gesture_components.*;
+import com.github.exformatgames.defender.systems.util_system.EventSystem;
 
 public class GestureInputSystem extends EventSystem {
 
@@ -37,26 +37,28 @@ public class GestureInputSystem extends EventSystem {
     private float rotationValue = 0;
     private float rotationOld = 0;
 
-    private final Camera camera;
     private Vector3 screenCoordinates = new Vector3();
 
+    private final Viewport viewport;
+    private final Vector2 screenCoords = new Vector2();
 
-    public GestureInputSystem(InputMultiplexer inputMultiplexer, Camera camera) {
+    public GestureInputSystem(InputMultiplexer inputMultiplexer, Viewport viewport) {
         super(Family.one(
-                GestureTapComponent.class,
-                GesturePanComponent.class,
-                GestureLongPressComponent.class,
-                GestureZoomComponent.class,
-                GestureRotateComponent.class,
-                GestureFlingComponent.class).get());
+            GestureTapComponent.class,
+            GesturePanComponent.class,
+            GestureLongPressComponent.class,
+            GestureZoomComponent.class,
+            GestureRotateComponent.class,
+            GestureFlingComponent.class).get());
 
         new InputGestures(inputMultiplexer);
-        this.camera = camera;
+        this.viewport = viewport;
     }
 
     @Override
     public void update() {
 
+        viewport.apply();
         super.update();
 
         currentEvent = TouchEvent.NULL;
@@ -69,7 +71,7 @@ public class GestureInputSystem extends EventSystem {
                 GestureTapComponent tapComponent = GestureTapComponent.getComponent(entity);
                 if (tapComponent != null) {
                     screenCoordinates.set(tap.x, tap.y, 0);
-                    screenCoordinates = camera.unproject(screenCoordinates);
+                    screenCoordinates = viewport.getCamera().unproject(screenCoordinates);
 
                     tapComponent.position.set(screenCoordinates.x, screenCoordinates.y);
                     tapComponent.count = (int) tap.z;
@@ -81,15 +83,27 @@ public class GestureInputSystem extends EventSystem {
             case PAN: {
                 GesturePanComponent panComponent = GesturePanComponent.getComponent(entity);
                 if (panComponent != null) {
-                    screenCoordinates.set(pan.x, pan.y, 0);
-                    screenCoordinates = camera.unproject(screenCoordinates);
-                    panComponent.position.set(screenCoordinates.x, screenCoordinates.y);
+                    screenCoords.set(pan.x, pan.y);
+                    viewport.unproject(screenCoords);
+                    panComponent.position.set(screenCoords.x, screenCoords.y);
 
-                    screenCoordinates.set(panDelta.x, panDelta.y, 0);
-                    screenCoordinates = camera.unproject(screenCoordinates);
-                    panComponent.delta.set(screenCoordinates.x, screenCoordinates.y);
+                    float asX = Configurations.WORLD_WIDTH / viewport.getScreenWidth();
+                    float asY = Configurations.WORLD_HEIGHT / viewport.getScreenHeight();
 
-                    panComponent.direction.set(screenCoordinates.x, screenCoordinates.y).nor();
+                    screenCoords.set(panDelta.x * asX, panDelta.y * asY);
+                    panComponent.delta.set(screenCoords.x, screenCoords.y);
+                    panComponent.direction.set(screenCoords.x, screenCoords.y).nor();
+
+
+                    //screenCoordinates.set(pan.x, pan.y, 0);
+                    //screenCoordinates = camera.unproject(screenCoordinates);
+                    //panComponent.position.set(screenCoordinates.x, screenCoordinates.y);
+
+                    //screenCoordinates.set(panDelta.x, panDelta.y, 0);
+                    //screenCoordinates = camera.unproject(screenCoordinates);
+                    //panComponent.delta.set(screenCoordinates.x, screenCoordinates.y);
+
+                    //panComponent.direction.set(screenCoordinates.x, screenCoordinates.y).nor();
                 }
 
                 break;
@@ -98,9 +112,13 @@ public class GestureInputSystem extends EventSystem {
             case PAN_STOP: {
                 GesturePanComponent panComponent = GesturePanComponent.getComponent(entity);
                 if (panComponent != null) {
-                    screenCoordinates.set(panStop.x, panStop.y, 0);
-                    screenCoordinates = camera.unproject(screenCoordinates);
-                    panComponent.stop.set(screenCoordinates.x, screenCoordinates.y);
+                    screenCoords.set(panStop.x, panStop.y);
+                    viewport.unproject(screenCoords);
+                    panComponent.stop.set(screenCoords.x, screenCoords.y);
+
+                    //screenCoordinates.set(panStop.x, panStop.y, 0);
+                    //screenCoordinates = camera.unproject(screenCoordinates);
+                    //panComponent.stop.set(screenCoordinates.x, screenCoordinates.y);
                 }
 
                 break;
@@ -110,7 +128,7 @@ public class GestureInputSystem extends EventSystem {
                 GestureLongPressComponent longPressComponent = GestureLongPressComponent.getComponent(entity);
                 if (longPressComponent != null) {
                     screenCoordinates.set(longPress.x, longPress.y, 0);
-                    screenCoordinates = camera.unproject(screenCoordinates);
+                    screenCoordinates = viewport.getCamera().unproject(screenCoordinates);
                     longPressComponent.position.set(screenCoordinates.x, screenCoordinates.y);
                 }
 
@@ -297,4 +315,4 @@ public class GestureInputSystem extends EventSystem {
     }
 }
 
-	
+

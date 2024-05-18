@@ -1,7 +1,9 @@
 package com.github.exformatgames.defender.components.transform_components;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.math.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
 
 public class TransformLightComponent implements Component {
 	public Vector2 position = new Vector2();

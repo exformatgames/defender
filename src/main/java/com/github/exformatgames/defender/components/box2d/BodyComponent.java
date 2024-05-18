@@ -1,10 +1,15 @@
 package com.github.exformatgames.defender.components.box2d;
 
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.math.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.utils.Pool;
 
-public class BodyComponent implements Component {
+public class BodyComponent implements Component, Pool.Poolable {
 
 	public Body body = null;
 
@@ -32,7 +37,9 @@ public class BodyComponent implements Component {
 	}
 
 	public BodyComponent setFriction(float value){
-		body.getFixtureList().first().setFriction(value);
+        for (Fixture fixture: body.getFixtureList()) {
+            fixture.setFriction(value);
+        }
 
 		return this;
 	}
@@ -133,4 +140,12 @@ public class BodyComponent implements Component {
 	public static BodyComponent getComponent(Entity entity) {
 		return mapper.get(entity);
 	}
+
+    @Override
+    public void reset() {
+        body = null;
+        entityUserData = null;
+        oldPosition.setZero();
+        oldRotation = 0;
+    }
 }

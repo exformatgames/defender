@@ -1,8 +1,9 @@
 package com.github.exformatgames.defender.systems.transform_systems;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.systems.*;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.github.exformatgames.defender.components.rendering_components.SpriteComponent;
 import com.github.exformatgames.defender.components.transform_components.AnimationComponent;
 
@@ -24,7 +25,11 @@ public class AnimationSpriteSystem extends IteratingSystem {
             anim.timeAnimation += dt;
 
             if (anim.animation.getPlayMode() == Animation.PlayMode.LOOP || !anim.animation.isAnimationFinished(anim.timeAnimation)) {
+                anim.isFinished = false;
                 sprite.setUV(anim.animation.getKeyFrame(anim.timeAnimation));
+            }
+            else if (anim.animation.isAnimationFinished(anim.timeAnimation)){
+                anim.isFinished = true;
             }
         }
     }

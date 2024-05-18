@@ -1,6 +1,6 @@
 package com.github.exformatgames.defender.utils;
 
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.Array;
 
 public class Uniforms {
     private final Array<Uniform> uniforms = new Array<>();

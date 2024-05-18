@@ -1,12 +1,14 @@
 package com.github.exformatgames.defender.components.box2d.transform_components;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.math.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
 
 public class ForceComponent implements Component {
 	public Vector2 point = new Vector2(0, 0);
 	public Vector2 force = new Vector2(0, 0);
-	
+
 	public boolean center = false;
 
 	public ForceComponent init(Vector2 point, Vector2 force, boolean center) {

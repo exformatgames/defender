@@ -1,38 +1,48 @@
 package com.github.exformatgames.defender;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.assets.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.glutils.*;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.math.*;
 import com.github.exformatgames.defender.assets.Assets;
-import com.github.exformatgames.defender.systems.debug.*;
-import com.github.exformatgames.defender.systems.util_system.*;
+import com.github.exformatgames.defender.components.box2d.BodyComponent;
 import com.github.exformatgames.defender.entities.Box2DEntityBuilder;
 import com.github.exformatgames.defender.systems.audio_systems.MusicSystem;
 import com.github.exformatgames.defender.systems.audio_systems.PointSoundSystem;
 import com.github.exformatgames.defender.systems.audio_systems.SoundSystem;
 import com.github.exformatgames.defender.systems.box2d_systems.*;
+import com.github.exformatgames.defender.systems.debug.*;
 import com.github.exformatgames.defender.systems.input_systems.GestureInputSystem;
 import com.github.exformatgames.defender.systems.input_systems.KeyboardInputSystem;
 import com.github.exformatgames.defender.systems.input_systems.MouseInputSystem;
 import com.github.exformatgames.defender.systems.input_systems.ResetGestureInputSystem;
-import com.github.exformatgames.defender.systems.rendering_systems.*;
+import com.github.exformatgames.defender.systems.rendering_systems.CullingSystem;
+import com.github.exformatgames.defender.systems.rendering_systems.OrthogonalMapRenderSystem;
+import com.github.exformatgames.defender.systems.rendering_systems.ParticlesSystem;
+import com.github.exformatgames.defender.systems.rendering_systems.SortedRenderSystem;
 import com.github.exformatgames.defender.systems.rendering_systems.ui.TextRenderSystem;
 import com.github.exformatgames.defender.systems.transform_systems.*;
+import com.github.exformatgames.defender.systems.util_system.*;
 import com.github.exformatgames.defender.utils.B2DContactListener;
 import com.github.exformatgames.defender.utils.BodyBuilder;
 import com.github.exformatgames.defender.utils.EntityBuilder;
 
 public abstract class Core {
-	
+
+    protected boolean pause = false;
+
 	protected OrthographicCamera worldCamera;
 	protected OrthographicCamera uiCamera;
 
@@ -56,28 +66,55 @@ public abstract class Core {
 	private DebugSpriteSystem debugSpriteSystem;
 	private DebugPrintEngineInfoSystem debugPrintEngineInfoSystem;
 
-	public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, final Assets assets) {
-		ASSETS = assets;
 
-		worldViewport = new ScalingViewport(Scaling.fill, worldViewportSize.x, worldViewportSize.y);
-		worldViewport.apply(true);
+    public Core(Viewport worldViewport, Vector2 gravity, SpriteBatch spriteBatch, InputMultiplexer inputMultiplexer, final Assets assets) {
+        ASSETS = assets;
 
-		uiViewport = new FillViewport(uiViewportSize.x, uiViewportSize.y);
-		uiViewport.apply(true);
+        this.spriteBatch = spriteBatch;
 
-		this.worldCamera = (OrthographicCamera) worldViewport.getCamera();
-		this.uiCamera = (OrthographicCamera) uiViewport.getCamera();
+        this.worldViewport = worldViewport;
+        uiViewport = new ExtendViewport(Configurations.UI_WIDTH, Configurations.UI_HEIGHT, 10000, 10000);
 
-		if (gravity != null) {
-			this.box2DWorld = new World(gravity, true);
-		}
-		this.spriteBatch = new SpriteBatch();
-		this.inputMultiplexer = inputMultiplexer;
-		this.assetManager = assets.getAssetManager();
+        this.worldCamera = (OrthographicCamera) worldViewport.getCamera();
+        this.uiCamera = (OrthographicCamera) uiViewport.getCamera();
 
-		Gdx.input.setInputProcessor(inputMultiplexer);
+        if (gravity != null) {
+            this.box2DWorld = new World(gravity, true);
+        }
 
-		engine = new PooledEngine(50, 500, 50, 5000);
+        this.inputMultiplexer = inputMultiplexer;
+
+        this.assetManager = assets.getAssetManager();
+
+        engine = new PooledEngine(50, 500, 50, 5000);
+
+    }
+
+    public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, SpriteBatch spriteBatch, InputMultiplexer inputMultiplexer, final Assets assets) {
+        ASSETS = assets;
+
+        this.spriteBatch = spriteBatch;
+
+        worldViewport = new ScalingViewport(Scaling.fill, worldViewportSize.x, worldViewportSize.y);
+        uiViewport = new ExtendViewport(uiViewportSize.x, uiViewportSize.y, 10000, 10000);
+
+        this.worldCamera = (OrthographicCamera) worldViewport.getCamera();
+        this.uiCamera = (OrthographicCamera) uiViewport.getCamera();
+
+        if (gravity != null) {
+            this.box2DWorld = new World(gravity, true);
+        }
+
+        this.inputMultiplexer = inputMultiplexer;
+
+        this.assetManager = assets.getAssetManager();
+
+        engine = new PooledEngine(50, 500, 50, 5000);
+
+    }
+
+    public Core(Vector2 worldViewportSize, Vector2 uiViewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, final Assets assets) {
+        this(worldViewportSize, uiViewportSize, gravity, new SpriteBatch(), inputMultiplexer, assets);
 	}
 
 	public Core(Vector2 viewportSize, Vector2 gravity, InputMultiplexer inputMultiplexer, Assets assets) {
@@ -85,8 +122,23 @@ public abstract class Core {
 	}
 
 	public Core(Vector2 gravity, InputMultiplexer inputMultiplexer, Assets assets) {
-		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), gravity, inputMultiplexer, assets);
+		this(
+            new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT),
+            new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT),
+            gravity,
+            inputMultiplexer,
+            assets);
 	}
+
+    public Core(Vector2 gravity, SpriteBatch spriteBatch, InputMultiplexer inputMultiplexer, Assets assets) {
+        this(
+            new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT),
+            new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT),
+            gravity,
+            spriteBatch,
+            inputMultiplexer,
+            assets);
+    }
 
 	public Core(Vector2 gravity, Assets assets) {
 		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), gravity, new InputMultiplexer(), assets);
@@ -98,19 +150,21 @@ public abstract class Core {
 
 	protected abstract void initEntities();
 	protected abstract void initGameSystems();
-	
+
 	public void update(float deltaTime){
-		engine.update(deltaTime);
+        if (! pause) {
+            engine.update(deltaTime);
+        }
 	}
-	
+
 	public final void create(boolean isDebug){
 		Configurations.VIEWPORTS_RATIO = Configurations.UI_HEIGHT / Configurations.WORLD_HEIGHT;
 
-		EntityBuilder.init(box2DWorld, engine, ASSETS, worldCamera);
+		EntityBuilder.init(box2DWorld, engine, ASSETS, worldViewport);
 		BodyBuilder.init(box2DWorld);
 
 		initEntities();//abstract
-		
+
 		initInputSystems();
 
 		if(box2DWorld != null){
@@ -127,7 +181,7 @@ public abstract class Core {
 
 		initRenderSystems();
 		initUtilsSystems();
-		
+
 		if(isDebug) {
 			this.debug = true;
 			debugShapeRenderer = new ShapeRenderer();
@@ -139,13 +193,13 @@ public abstract class Core {
 		addSystem(new RemoveEntitySystem(box2DWorld));
 		addSystem(new RemoveAllEntitiesSystem(box2DWorld));
 	}
-	
+
 	private void initInputSystems(){
-		engine.addSystem(new GestureInputSystem(inputMultiplexer, worldCamera));
-		engine.addSystem(new KeyboardInputSystem());
+		engine.addSystem(new GestureInputSystem(inputMultiplexer, worldViewport));
+		engine.addSystem(new KeyboardInputSystem(inputMultiplexer));
 		engine.addSystem(new MouseInputSystem(inputMultiplexer, worldViewport));
 	}
-	
+
 	private void initBox2DSystems(){
 		new Box2DEntityBuilder().create();
 
@@ -163,13 +217,13 @@ public abstract class Core {
 
 		box2DWorld.setContactListener(new B2DContactListener());
 	}
-	
+
 	private void initAudioSystems(){
 		addSystem(new SoundSystem());
 		addSystem(new PointSoundSystem(worldCamera));
 		addSystem(new MusicSystem());
 	}
-	
+
 	private void initAnimationEffectSystems(){
 		addSystem(new AnimationSpriteSystem());
 		addSystem(new ParallaxSystem(worldCamera));
@@ -177,7 +231,7 @@ public abstract class Core {
 		addSystem(new AngularVelocitySystem());
 		addSystem(new LinearVelocitySystem());
 	}
-	
+
 	private void initTransformSystems(){
 		addSystem(new RotationSystem());
 		addSystem(new RotateSystem());
@@ -187,19 +241,19 @@ public abstract class Core {
 		addSystem(new TransformLightComponentSystem());
 		addSystem(new TranslateSystem());
 	}
-	
+
 	private void initRenderSystems(){
-		addSystem(new CullingSystem(worldCamera));
+		addSystem(new CullingSystem(worldViewport));
 		addSystem(new OrthogonalMapRenderSystem(worldCamera));
 		addSystem(new SortedRenderSystem(worldViewport, spriteBatch));
 		addSystem(new TextRenderSystem(uiViewport, spriteBatch));
 	}
-	
+
 	private void initParticleSystems(){
 		addSystem(new ParticlesSystem());
 		if (box2DWorld != null) addSystem(new B2DParticleEmitterUpateSystem());
 	}
-	
+
 	private void initUtilsSystems(){
 		engine.addSystem(new CreateEntitySystem());
 		engine.addSystem(new SetPreferencesSystem());
@@ -215,7 +269,7 @@ public abstract class Core {
 				debugRayCastSystem = new DebugRayCastSystem(worldCamera, debugShapeRenderer);
 
 			if (debugPhysicsSystem == null)
-				debugPhysicsSystem = new DebugPhysicsSystem(worldCamera);
+				debugPhysicsSystem = new DebugPhysicsSystem(worldViewport, worldCamera);
 
 			addSystem(debugRayCastSystem);
 			addSystem(debugPhysicsSystem);
@@ -263,23 +317,39 @@ public abstract class Core {
 
 	public void resize(int width, int height) {
 		if (worldViewport != null && uiViewport != null){
-			worldViewport.update(width, height, true);
+			worldViewport.update(width, height);
 			uiViewport.update(width, height, true);
 		}
 	}
 
-	public void pause() {}
+	public void pause() {
+        pause = true;
+    }
 
-	public void hide() {}
+	public void hide() {
+        pause = true;
+    }
 
-	public void resume() {}
+	public void resume() {
+        pause = false;
+    }
 
 	public void dispose(){
-		ASSETS.getTextureAtlas().dispose();
 		if (box2DWorld != null) {
+            for (Entity entity: engine.getEntitiesFor(Family.all(BodyComponent.class).get())) {
+                BodyComponent bodyComponent = BodyComponent.getComponent(entity);
+                for (Fixture fixture : bodyComponent.body.getFixtureList()) {
+                    bodyComponent.body.destroyFixture(fixture);
+                }
+                box2DWorld.destroyBody(bodyComponent.body);
+            }
 			box2DWorld.dispose();
-		}
-		assetManager.dispose();
+
+            EntityBuilder.world = null;
+        }
+        engine.removeAllEntities();
+        spriteBatch.dispose();
+        ASSETS.dispose();
 		ASSETS = null;
 	}
 

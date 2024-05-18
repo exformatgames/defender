@@ -1,9 +1,10 @@
 package com.github.exformatgames.defender.systems.transform_systems;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.systems.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.math.*;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 import com.github.exformatgames.defender.components.transform_components.ParallaxComponent;
 import com.github.exformatgames.defender.components.transform_components.TranslateComponent;
 

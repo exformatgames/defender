@@ -1,14 +1,16 @@
 package com.github.exformatgames.defender.components.audio_components;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.audio.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Pool;
 import com.github.exformatgames.defender.Core;
 
-public class SoundComponent implements Component {
+public class SoundComponent implements Component, Pool.Poolable {
 	public Sound sound = null;
 	public long ID = 0;
 	public float volume = 1;
-	public boolean isPlaying = false;
 	public boolean isLooping = false;
 	public boolean play = true;
 	public float pan = 0; //-1 -- 1
@@ -18,6 +20,10 @@ public class SoundComponent implements Component {
 		return init(Core.ASSETS.getSound(name), 1, true, 0);
 	}
 
+	public SoundComponent init(String name, float volume, boolean loop) {
+        isLooping = loop;
+		return init(Core.ASSETS.getSound(name), volume, true, 0);
+	}
 	public SoundComponent init(String name, float volume) {
 		return init(Core.ASSETS.getSound(name), volume, true, 0);
 	}
@@ -35,7 +41,16 @@ public class SoundComponent implements Component {
 		return this;
 	}
 
-	private final static ComponentMapper<SoundComponent> mapper = ComponentMapper.getFor(SoundComponent.class);
+    @Override
+    public void reset() {
+        this.sound = null;
+        this.volume = 1;
+        this.play = true;
+        this.pan = 0;
+        isLooping = false;
+    }
+
+    private final static ComponentMapper<SoundComponent> mapper = ComponentMapper.getFor(SoundComponent.class);
 
 	public static SoundComponent getComponent(Entity entity) {
 		return mapper.get(entity);

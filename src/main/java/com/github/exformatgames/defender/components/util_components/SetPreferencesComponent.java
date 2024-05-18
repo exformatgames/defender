@@ -6,12 +6,12 @@ import com.badlogic.ashley.core.Entity;
 import com.github.exformatgames.defender.Configurations;
 
 public class SetPreferencesComponent implements Component {
-	
+
 	public String preferencesName;
 	public PreferencesType type;
-	
+
 	public String key;
-	
+
 	public String stringValue;
 	public int intValue;
 	public float floatValue;

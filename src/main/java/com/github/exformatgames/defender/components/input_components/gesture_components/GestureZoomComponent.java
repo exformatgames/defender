@@ -1,12 +1,14 @@
 package com.github.exformatgames.defender.components.input_components.gesture_components;
 
-import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 
 public class GestureZoomComponent implements Component {
 
 	public float initialDistance;
 	public float endDistance;
-	
+
 	public float zoom;
 	public float delta;
 

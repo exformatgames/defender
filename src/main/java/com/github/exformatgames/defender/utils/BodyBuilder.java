@@ -2,6 +2,7 @@ package com.github.exformatgames.defender.utils;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Pools;
 
 public class BodyBuilder {
 
@@ -70,19 +71,78 @@ public class BodyBuilder {
 		BODY_DEF.bullet = true;
 		BODY_DEF.fixedRotation = true;
 		BODY_DEF.active = true;
+        BODY_DEF.gravityScale = 0;
 
 		CircleShape circleShape = new CircleShape();
 		circleShape.setRadius(radius);
 
 		FIXTURE_DEF.shape = circleShape;
+        FIXTURE_DEF.density = 0.1f;
+        FIXTURE_DEF.isSensor = true;
 
 		Body body = world.createBody(BODY_DEF);
 		body.createFixture(FIXTURE_DEF);
 
+        circleShape.dispose();
+
 		return body;
 	}
 
-	/**
+    public static Body buildKinematicBullet(float positionX, float positionY, float velocityX, float velocityY, float radius) {
+		resetAll();
+
+		BODY_DEF.type = BodyDef.BodyType.KinematicBody;
+		BODY_DEF.position.set(positionX, positionY);
+		BODY_DEF.linearVelocity.set(velocityX, velocityY);
+		BODY_DEF.bullet = true;
+		BODY_DEF.fixedRotation = true;
+		BODY_DEF.active = true;
+
+		CircleShape circleShape = new CircleShape();
+		circleShape.setRadius(radius);
+
+		FIXTURE_DEF.shape = circleShape;
+        FIXTURE_DEF.density = 0.1f;
+        FIXTURE_DEF.isSensor = true;
+
+		Body body = world.createBody(BODY_DEF);
+		body.createFixture(FIXTURE_DEF);
+
+        circleShape.dispose();
+
+		return body;
+	}
+    public static Body buildBullet(float positionX, float positionY, float velocityX, float velocityY, float radius, short mask, short cat, short group) {
+        resetAll();
+
+        BODY_DEF.type = BodyDef.BodyType.DynamicBody;
+        BODY_DEF.position.set(positionX, positionY);
+        BODY_DEF.angle = (float)Math.atan2(velocityY, velocityX);
+        BODY_DEF.linearVelocity.set(velocityX, velocityY);
+        BODY_DEF.bullet = true;
+        BODY_DEF.fixedRotation = true;
+        BODY_DEF.active = true;
+
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(radius);
+
+        FIXTURE_DEF.shape = circleShape;
+        FIXTURE_DEF.density = 0.1f;
+        FIXTURE_DEF.isSensor = true;
+        FIXTURE_DEF.filter.maskBits = mask;
+        FIXTURE_DEF.filter.categoryBits = cat;
+        FIXTURE_DEF.filter.groupIndex = group;
+
+        Body body = world.createBody(BODY_DEF);
+        body.createFixture(FIXTURE_DEF);
+
+        circleShape.dispose();
+
+        return body;
+    }
+
+
+    /**
 	 * Builds a new body, parameters and filter, by default.
 	 * @param type
 	 * @param positionX
@@ -108,6 +168,32 @@ public class BodyBuilder {
 		return body;
 	}
 
+    public static Body buildOval(BodyDef.BodyType type, float positionX, float positionY, float width, float height) {
+        resetAll();
+
+        BODY_DEF.type = type;
+        BODY_DEF.position.set(positionX, positionY);
+        BODY_DEF.angle = 0;
+
+        Body body = world.createBody(BODY_DEF);
+
+        PolygonShape shape = new PolygonShape();
+        float h = (height / 2) - width / 2;
+        if (h < 0) {
+            h = 0.01f;
+        }
+
+        shape.setAsBox(width / 2, h);
+        FIXTURE_DEF.shape = shape;
+        body.createFixture(FIXTURE_DEF);
+
+        shape.dispose();
+
+        attachCircleFixture(0, h, width / 2, body);
+        attachCircleFixture(0, -h, width / 2, body);
+        return body;
+    }
+
 	/**
 	 * Builds a new body, parameters and filter, by default.
 	 * @param type
@@ -117,21 +203,26 @@ public class BodyBuilder {
 	 * @return final body for editing parameters
 	 */
 	public static Body buildCircle(BodyDef.BodyType type, float positionX,float positionY, float radius) {
-		resetAll();
-
-		BODY_DEF.type = type;
-		BODY_DEF.position.set(positionX, positionY);
-		Body body = world.createBody(BODY_DEF);
-
-		CircleShape circleShape = new CircleShape();
-
-		circleShape.setRadius(radius);
-		FIXTURE_DEF.shape = circleShape;
-		body.createFixture(FIXTURE_DEF);
-
-		return body;
+		return buildCircle(type, positionX, positionY, 0, radius);
 	}
+    public static Body buildCircle(BodyDef.BodyType type, float positionX,float positionY, float rotation, float radius) {
+        resetAll();
 
+        BODY_DEF.type = type;
+        BODY_DEF.position.set(positionX, positionY);
+        BODY_DEF.angle = rotation;
+        Body body = world.createBody(BODY_DEF);
+
+        CircleShape circleShape = new CircleShape();
+
+        circleShape.setRadius(radius);
+        FIXTURE_DEF.shape = circleShape;
+        body.createFixture(FIXTURE_DEF);
+
+        circleShape.dispose();
+
+        return body;
+    }
 	/**
 	 * Builds a new body based on the sensor, parameters and filter, by default.
 	 * @param type
@@ -218,7 +309,7 @@ public class BodyBuilder {
 	 * @return final fixture for editing parameters
 	 */
 	public static Fixture addBoxSensor(Body body, float width, float height) {
-		return addBoxSensor(body, width, height, body.getFixtureList().first().getFilterData());
+		return addBoxSensor(body, width, height, (Filter) body.getFixtureList().first().getFilterData());
 	}
 
 	/**
@@ -234,6 +325,7 @@ public class BodyBuilder {
 		CircleShape circleShape = new CircleShape();
 		circleShape.setRadius(radius);
 		FIXTURE_DEF.shape = circleShape;
+        FIXTURE_DEF.density = 0;
 		FIXTURE_DEF.isSensor = true;
 		Fixture fixtureSensor = body.createFixture(FIXTURE_DEF);
 		fixtureSensor.setFilterData(filter);
@@ -250,7 +342,7 @@ public class BodyBuilder {
 	 * @return final fixture for editing parameters
 	 */
 	public static Fixture addCircleSensor(Body body, float radius) {
-		return addCircleSensor(body, radius, body.getFixtureList().first().getFilterData());
+		return addCircleSensor(body, radius, (Filter) body.getFixtureList().first().getFilterData());
 	}
 
 
@@ -277,13 +369,14 @@ public class BodyBuilder {
 	}
 
 	/**
-	 * method adds a new fixture to an existing body with default parameters and a filter from the first body fixture	 * @param body
-	 * @param width
-	 * @param height
-	 * @return final fixture for editing parameters
-	 */
+     * method adds a new fixture to an existing body with default parameters and a filter from the first body fixture	 * @param body
+     *
+     * @param width
+     * @param height
+     * @return final fixture for editing parameters
+     */
 	public static Fixture addBoxFixture(Body body, float width, float height) {
-		return addBoxFixture(body, width, height, body.getFixtureList().first().getFilterData());
+		return addBoxFixture(body, width, height, (Filter) body.getFixtureList().first().getFilterData());
 	}
 
 	/**
@@ -313,8 +406,67 @@ public class BodyBuilder {
 	 * @return final fixture for editing parameters
 	 */
 	public static Fixture addCircleFixture(Body body, float radius) {
-		return addCircleFixture(body, radius, body.getFixtureList().first().getFilterData());
+		return addCircleFixture(body, radius, (Filter) body.getFixtureList().first().getFilterData());
 	}
+
+    public static Body createEmptyBody(BodyDef.BodyType type) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = type;
+
+        return world.createBody(bodyDef);
+    }
+
+    public static void attachBoxFixture(float x, float y, float size, Body body) {
+        attachBoxFixture(x, y, size, size, body);
+    }
+
+    public static void attachBoxFixture(float x, float y, float width, float height, Body body) {
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.isSensor = false;
+        PolygonShape polygonShape = new PolygonShape();
+
+        Vector2 lb = Pools.obtain(Vector2.class);
+        Vector2 lt = Pools.obtain(Vector2.class);
+        Vector2 rb = Pools.obtain(Vector2.class);
+        Vector2 rt = Pools.obtain(Vector2.class);
+
+        lb.set(x, y);
+        lt.set(x, y + height);
+        rb.set(x + width, y);
+        rt.set(x + width, y + height);
+
+        Vector2[] box = {lb, lt, rb, rt};
+        polygonShape.set(box);
+        fixtureDef.shape = polygonShape;
+
+        body.createFixture(fixtureDef);
+
+        Pools.free(lb);
+        Pools.free(lt);
+        Pools.free(rb);
+        Pools.free(rt);
+
+        polygonShape.dispose();
+    }
+
+    public static void attachCircleFixture(float x, float y, float radius, Body body) {
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.isSensor = false;
+
+        Vector2 position = Pools.obtain(Vector2.class);
+        position.set(x, y);
+
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(radius);
+        circleShape.setPosition(position);
+
+        fixtureDef.shape = circleShape;
+
+        body.createFixture(fixtureDef);
+
+        Pools.free(position);
+        circleShape.dispose();
+    }
 
 	protected static void resetBodyDef(){
 		BODY_DEF.type = BodyDef.BodyType.DynamicBody;
@@ -338,7 +490,7 @@ public class BodyBuilder {
 		FIXTURE_DEF.friction = 0.2f;
 
 		FIXTURE_DEF.restitution = 0;
-		FIXTURE_DEF.density = 0;
+		FIXTURE_DEF.density = 1;
 		FIXTURE_DEF.isSensor = false;
 		FIXTURE_DEF.filter.categoryBits = 0x0001;
 		FIXTURE_DEF.filter.groupIndex = 0;

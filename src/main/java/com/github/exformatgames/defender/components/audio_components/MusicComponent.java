@@ -1,7 +1,9 @@
 package com.github.exformatgames.defender.components.audio_components;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.audio.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.audio.Music;
 import com.github.exformatgames.defender.Core;
 
 public class MusicComponent implements Component {

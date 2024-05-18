@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class Configurations {
 
+    public static String GAME_NAME = "default_name";
+
 	public static final Array<Integer> TARGET_KEYS = new Array<>();
 	public static final Array<Integer> TARGET_BUTTONS = new Array<>();
 
@@ -27,7 +29,7 @@ public class Configurations {
 
 	public static float VIEWPORTS_RATIO = 100;
 
-	public static String PREFERENCES_NAME = "default_name";
+	public static String PREFERENCES_NAME = "defender_default_pref_name";
 
 	public static float WORLD_WIDTH = 10.8f;
 	public static float WORLD_HEIGHT = 19.2f;
@@ -36,4 +38,9 @@ public class Configurations {
 	public static float UI_HEIGHT = 1920;
 
 	public static float ZOOM_BASIS = 0.135f;
+
+
+    public static float BOX2D_TIME_STEP = 0.016f;
+    public static float TARGET_FPS = 60;
+
 }

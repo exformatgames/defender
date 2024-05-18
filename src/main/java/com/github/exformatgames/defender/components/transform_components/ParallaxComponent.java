@@ -1,10 +1,12 @@
 package com.github.exformatgames.defender.components.transform_components;
 
-import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 
 public class ParallaxComponent implements Component {
 	public int layer = 0;
-	
+
 	public boolean horizontal = false;
 	public boolean vertical = false;
 

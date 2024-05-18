@@ -1,7 +1,9 @@
 package com.github.exformatgames.defender.components.box2d.transform_components;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.math.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
 
 public class TransformBodyComponent implements Component {
 	public Vector2 position = new Vector2();
@@ -19,6 +21,14 @@ public class TransformBodyComponent implements Component {
 
 		return this;
 	}
+
+    public TransformBodyComponent init(float x, float y, float angle, boolean awake) {
+        this.position.set(position);
+        this.angle = angle;
+        this.awake = awake;
+
+        return this;
+    }
 
 	private final static ComponentMapper<TransformBodyComponent> mapper = ComponentMapper.getFor(TransformBodyComponent.class);
 

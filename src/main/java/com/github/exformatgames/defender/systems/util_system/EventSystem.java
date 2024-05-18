@@ -1,7 +1,10 @@
 package com.github.exformatgames.defender.systems.util_system;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.utils.*;
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 
 public abstract class EventSystem extends EntitySystem {
 

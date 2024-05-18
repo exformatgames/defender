@@ -1,9 +1,11 @@
 package com.github.exformatgames.defender.systems.debug;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.systems.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.glutils.*;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.github.exformatgames.defender.components.box2d.RayComponent;
 
 public class DebugRayCastSystem extends IteratingSystem {

@@ -1,6 +1,8 @@
 package com.github.exformatgames.defender.components.platform_components;
 
-import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 
 public class VibrationComponent implements Component {
 

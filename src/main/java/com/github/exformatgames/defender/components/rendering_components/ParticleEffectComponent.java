@@ -1,7 +1,9 @@
 package com.github.exformatgames.defender.components.rendering_components;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.github.exformatgames.defender.utils.Particles;
 
 public class ParticleEffectComponent implements Component {

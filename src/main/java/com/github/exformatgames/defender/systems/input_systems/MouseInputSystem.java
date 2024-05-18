@@ -19,7 +19,7 @@ public class MouseInputSystem extends IteratingSystem {
     private final Array<Integer> pressedButtons = new Array<>();
     private final Array<Integer> justPressedButtons = new Array<>();
     private final Vector2 mousePosition = new Vector2();
-
+    private final Vector2 oldMousePosition = new Vector2();
     private final Viewport viewport;
     public MouseInputSystem(InputMultiplexer inputMultiplexer, Viewport viewport) {
         super(Family.one(MouseComponent.class, ButtonPressedComponent.class, ButtonJustPressedComponent.class).get());
@@ -57,6 +57,7 @@ public class MouseInputSystem extends IteratingSystem {
         ButtonJustPressedComponent buttonJustPressedComponent = ButtonJustPressedComponent.getComponent(entity);
 
         mouseComponent.position.set(mousePosition.x, mousePosition.y);
+        mouseComponent.delta.set(mousePosition.x - oldMousePosition.x, mousePosition.y - oldMousePosition.y);
         if (buttonPressedComponent != null) {
             buttonPressedComponent.buttons.clear();
             buttonPressedComponent.buttons.addAll(pressedButtons);
@@ -105,6 +106,7 @@ public class MouseInputSystem extends IteratingSystem {
 
         @Override
         public boolean touchDragged(int screenX, int screenY, int pointer) {
+            oldMousePosition.set(mousePosition);
             mousePosition.set(screenX, screenY);
             viewport.unproject(mousePosition);
             return false;
@@ -112,10 +114,11 @@ public class MouseInputSystem extends IteratingSystem {
 
         @Override
         public boolean mouseMoved(int screenX, int screenY) {
+            oldMousePosition.set(mousePosition);
             mousePosition.set(screenX, screenY);
             viewport.unproject(mousePosition);
 
-            return true;
+            return false;
         }
 
         @Override

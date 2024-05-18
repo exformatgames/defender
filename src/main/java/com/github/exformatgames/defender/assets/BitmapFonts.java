@@ -1,10 +1,11 @@
 package com.github.exformatgames.defender.assets;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
 
 public class BitmapFonts {
-	
+
 	private Array<BitmapFont> fonts = new Array<>();
 	private Array<String> fontNames = new Array<>();
 
@@ -22,5 +23,10 @@ public class BitmapFonts {
 		}
 		return null;
 	}
-	
+
+    public void dispose() {
+        for (BitmapFont bitmapFont: fonts) {
+            bitmapFont.dispose();
+        }
+    }
 }

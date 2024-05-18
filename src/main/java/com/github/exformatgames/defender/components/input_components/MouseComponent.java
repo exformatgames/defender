@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 public class MouseComponent implements Component {
 
     public final Vector2 position = new Vector2();
+    public final Vector2 delta = new Vector2();
 
     private final static ComponentMapper<MouseComponent> mapper = ComponentMapper.getFor(MouseComponent.class);
 

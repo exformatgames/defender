@@ -1,13 +1,15 @@
 package com.github.exformatgames.defender.components.box2d;
 
-import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
 
 public class RayComponent implements Component {
-	
+
 	public Vector2 fromPoint = new Vector2();
-	public Vector2 toPoint = new Vector2(); 
+	public Vector2 toPoint = new Vector2();
 	public Vector2 collisionPoint = new Vector2();
 	public Fixture collisionFixture;
 	public float maxRayLength = 15;
@@ -25,7 +27,7 @@ public class RayComponent implements Component {
 		toPoint.set(toPointX, toPointY);
 		isCast = true;
 	}
-	
+
 	private final static ComponentMapper<RayComponent> mapper = ComponentMapper.getFor(RayComponent.class);
 
 	public static RayComponent getComponent(Entity entity) {
