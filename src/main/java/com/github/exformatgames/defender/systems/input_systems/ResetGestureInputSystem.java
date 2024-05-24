@@ -42,6 +42,7 @@ public class ResetGestureInputSystem extends IteratingSystem {
         if (zoomComponent != null) {
             zoomComponent.initialDistance = 0;
             zoomComponent.endDistance = 0;
+            zoomComponent.ratio = 0;
         }
 
 
