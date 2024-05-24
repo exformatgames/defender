@@ -140,6 +140,16 @@ public abstract class Core {
             assets);
     }
 
+	public Core(SpriteBatch spriteBatch, InputMultiplexer inputMultiplexer, Assets assets) {
+		this(
+				new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT),
+				new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT),
+				Configurations.GRAVITY,
+				spriteBatch,
+				inputMultiplexer,
+				assets);
+	}
+
 	public Core(Vector2 gravity, Assets assets) {
 		this(new Vector2(Configurations.WORLD_WIDTH, Configurations.WORLD_HEIGHT), new Vector2(Configurations.UI_WIDTH, Configurations.UI_HEIGHT), gravity, new InputMultiplexer(), assets);
 	}
@@ -181,7 +191,7 @@ public abstract class Core {
 		initParticleSystems();
 
 		initRenderSystems();
-		initPostRenderSystems();
+		initPostRenderSystems();//abstract
 		initUtilsSystems();
 
 		if(isDebug) {

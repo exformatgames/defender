@@ -1,6 +1,7 @@
 package com.github.exformatgames.defender;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class Configurations {
@@ -24,7 +25,6 @@ public class Configurations {
 	public static float GLOBAL_SOUND_VOLUME = 1; //TODO 0-1
 	public static float GLOBAL_MUSIC_VOLUME = 1; //TODO 0-1
 
-	public static float DIVIDER = 100;
 	public static float SCL = 0.01f;
 
 	public static float VIEWPORTS_RATIO = 100;
@@ -37,10 +37,6 @@ public class Configurations {
 	public static float UI_WIDTH = 1080;
 	public static float UI_HEIGHT = 1920;
 
-	public static float ZOOM_BASIS = 0.135f;
-
-
+	public static Vector2 GRAVITY = new Vector2();
     public static float BOX2D_TIME_STEP = 0.016f;
-    public static float TARGET_FPS = 60;
-
 }
