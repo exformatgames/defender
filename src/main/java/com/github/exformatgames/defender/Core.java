@@ -150,6 +150,7 @@ public abstract class Core {
 
 	protected abstract void initEntities();
 	protected abstract void initGameSystems();
+	protected abstract void initPostRenderSystems();
 
 	public void update(float deltaTime){
         if (! pause) {
@@ -180,6 +181,7 @@ public abstract class Core {
 		initParticleSystems();
 
 		initRenderSystems();
+		initPostRenderSystems();
 		initUtilsSystems();
 
 		if(isDebug) {
