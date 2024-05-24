@@ -8,9 +8,8 @@ public class GestureZoomComponent implements Component {
 
 	public float initialDistance;
 	public float endDistance;
+	public float ratio;
 
-	public float zoom;
-	public float delta;
 
 	private final static ComponentMapper<GestureZoomComponent> mapper = ComponentMapper.getFor(GestureZoomComponent.class);
 

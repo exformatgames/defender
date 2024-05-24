@@ -2,7 +2,6 @@ package com.github.exformatgames.defender.systems.input_systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Intersector;
@@ -28,7 +27,6 @@ public class GestureInputSystem extends EventSystem {
 
     private float zoomInitialDistance;
     private float zoomDistance;
-    private float zoomDelta;
 
     private final Vector2 fling = new Vector2(0, 0);
 
@@ -93,17 +91,6 @@ public class GestureInputSystem extends EventSystem {
                     screenCoords.set(panDelta.x * asX, panDelta.y * asY);
                     panComponent.delta.set(screenCoords.x, screenCoords.y);
                     panComponent.direction.set(screenCoords.x, screenCoords.y).nor();
-
-
-                    //screenCoordinates.set(pan.x, pan.y, 0);
-                    //screenCoordinates = camera.unproject(screenCoordinates);
-                    //panComponent.position.set(screenCoordinates.x, screenCoordinates.y);
-
-                    //screenCoordinates.set(panDelta.x, panDelta.y, 0);
-                    //screenCoordinates = camera.unproject(screenCoordinates);
-                    //panComponent.delta.set(screenCoordinates.x, screenCoordinates.y);
-
-                    //panComponent.direction.set(screenCoordinates.x, screenCoordinates.y).nor();
                 }
 
                 break;
@@ -115,10 +102,6 @@ public class GestureInputSystem extends EventSystem {
                     screenCoords.set(panStop.x, panStop.y);
                     viewport.unproject(screenCoords);
                     panComponent.stop.set(screenCoords.x, screenCoords.y);
-
-                    //screenCoordinates.set(panStop.x, panStop.y, 0);
-                    //screenCoordinates = camera.unproject(screenCoordinates);
-                    //panComponent.stop.set(screenCoordinates.x, screenCoordinates.y);
                 }
 
                 break;
@@ -140,8 +123,7 @@ public class GestureInputSystem extends EventSystem {
                 if (zoomComponent != null) {
                     zoomComponent.initialDistance = zoomInitialDistance;
                     zoomComponent.endDistance = zoomDistance;
-
-                    zoomComponent.delta = zoomDelta;
+                    zoomComponent.ratio = zoomInitialDistance / zoomDistance;
                 }
 
                 break;
@@ -196,7 +178,7 @@ public class GestureInputSystem extends EventSystem {
 
         @Override
         public boolean tap(float x, float y, int count, int button) {
-            tap.set(x, Gdx.graphics.getHeight() - y, 0);
+            tap.set(x, y, 0);
             tap.z = count;
 
             currentEvent = TouchEvent.TAP;
@@ -207,7 +189,7 @@ public class GestureInputSystem extends EventSystem {
 
         @Override
         public boolean pan(float x, float y, float deltaX, float deltaY) {
-            pan.set(x, Gdx.graphics.getHeight() - y);
+            pan.set(x, y);
             panDelta.set(deltaX, deltaY * -1);
 
             currentEvent = TouchEvent.PAN;
@@ -219,7 +201,7 @@ public class GestureInputSystem extends EventSystem {
 
         @Override
         public boolean panStop(float x, float y, int pointer, int button) {
-            panStop.set(x, Gdx.graphics.getHeight() - y);
+            panStop.set(x, y);
             currentEvent = TouchEvent.PAN_STOP;
 
             update();
@@ -229,7 +211,7 @@ public class GestureInputSystem extends EventSystem {
 
         @Override
         public boolean longPress(float x, float y) {
-            longPress.set(x, Gdx.graphics.getHeight() - y);
+            longPress.set(x, y);
 
             currentEvent = TouchEvent.LONG;
             update();
@@ -239,21 +221,12 @@ public class GestureInputSystem extends EventSystem {
 
         @Override
         public boolean zoom(float initialDistance, float distance) {
-            initialDistance *= Configurations.SCL;
-            distance *= Configurations.SCL;
+            zoomInitialDistance = initialDistance;
+            zoomDistance = distance;
 
-            float differenceDistance = zoomDistance / distance;
-            if (differenceDistance > 1.02f || differenceDistance < 0.98f) {
+            currentEvent = TouchEvent.ZOOM;
 
-                zoomDelta = differenceDistance < 1 ? Configurations.ZOOM_BASIS : -Configurations.ZOOM_BASIS;
-
-                zoomInitialDistance = initialDistance;
-                zoomDistance = distance;
-
-                currentEvent = TouchEvent.ZOOM;
-
-                update();
-            }
+            update();
 
             return false;
         }
