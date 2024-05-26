@@ -8,8 +8,11 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.exformatgames.defender.Configurations;
+import com.github.exformatgames.defender.components.input_components.DragAndDropComponent;
 import com.github.exformatgames.defender.components.input_components.gesture_components.*;
 import com.github.exformatgames.defender.systems.util_system.EventSystem;
 
@@ -36,30 +39,45 @@ public class GestureInputSystem extends EventSystem {
     private float rotationOld = 0;
 
     private Vector3 screenCoordinates = new Vector3();
+    private final Vector2 touchdown = new Vector2();
+
+    private final Vector2 drag = new Vector2();
+    private final Vector2 dragDelta = new Vector2();
 
     private final Viewport viewport;
     private final Vector2 screenCoords = new Vector2();
 
     public GestureInputSystem(InputMultiplexer inputMultiplexer, Viewport viewport) {
         super(Family.one(
-            GestureTapComponent.class,
-            GesturePanComponent.class,
-            GestureLongPressComponent.class,
-            GestureZoomComponent.class,
-            GestureRotateComponent.class,
-            GestureFlingComponent.class).get());
+                GestureTapComponent.class,
+                GesturePanComponent.class,
+                GestureLongPressComponent.class,
+                GestureZoomComponent.class,
+                GestureRotateComponent.class,
+                GestureFlingComponent.class,
+                DragAndDropComponent.class).get());
 
         new InputGestures(inputMultiplexer);
         this.viewport = viewport;
     }
 
     @Override
-    public void update() {
-
+    public void startProcessing() {
         viewport.apply();
+    }
+
+    @Override
+    public void endProcessing() {
+        currentEvent = TouchEvent.NULL;
+    }
+
+    @Override
+    public void update() {
+        startProcessing();
+
         super.update();
 
-        currentEvent = TouchEvent.NULL;
+        endProcessing();
     }
 
     @Override
@@ -82,15 +100,18 @@ public class GestureInputSystem extends EventSystem {
                 GesturePanComponent panComponent = GesturePanComponent.getComponent(entity);
                 if (panComponent != null) {
                     screenCoords.set(pan.x, pan.y);
+
                     viewport.unproject(screenCoords);
-                    panComponent.position.set(screenCoords.x, screenCoords.y);
+                    viewport.unproject(touchdown);
+
+                    GesturePanComponent.position.set(screenCoords.x, screenCoords.y);
 
                     float asX = Configurations.WORLD_WIDTH / viewport.getScreenWidth();
                     float asY = Configurations.WORLD_HEIGHT / viewport.getScreenHeight();
 
                     screenCoords.set(panDelta.x * asX, panDelta.y * asY);
-                    panComponent.delta.set(screenCoords.x, screenCoords.y);
-                    panComponent.direction.set(screenCoords.x, screenCoords.y).nor();
+                    GesturePanComponent.delta.set(screenCoords.x, screenCoords.y);
+                    GesturePanComponent.direction.set(screenCoords.x, screenCoords.y).nor();
                 }
 
                 break;
@@ -101,7 +122,8 @@ public class GestureInputSystem extends EventSystem {
                 if (panComponent != null) {
                     screenCoords.set(panStop.x, panStop.y);
                     viewport.unproject(screenCoords);
-                    panComponent.stop.set(screenCoords.x, screenCoords.y);
+                    GesturePanComponent.stop.set(screenCoords.x, screenCoords.y);
+
                 }
 
                 break;
@@ -167,13 +189,50 @@ public class GestureInputSystem extends EventSystem {
 
                 break;
             }
+
+            case DRAG_START:{
+                DragAndDropComponent dragAndDropComponent = DragAndDropComponent.getComponent(entity);
+                if (dragAndDropComponent != null) {
+                    dragAndDropComponent.isDragging = true;
+                    dragAndDropComponent.dragStop.setZero();
+                    dragAndDropComponent.dragStart.set(viewport.unproject(drag));
+                    dragAndDropComponent.dragPosition.setZero();
+                    dragAndDropComponent.dragDelta.setZero();
+                }
+                break;
+            }
+
+            case DRAG: {
+                DragAndDropComponent dragAndDropComponent = DragAndDropComponent.getComponent(entity);
+                if (dragAndDropComponent != null) {
+                    float asX = Configurations.WORLD_WIDTH / viewport.getScreenWidth();
+                    float asY = Configurations.WORLD_HEIGHT / viewport.getScreenHeight();
+
+                    dragAndDropComponent.dragPosition.set(viewport.unproject(drag));
+                    dragAndDropComponent.dragDelta.set(drag.x * asX, drag.y * asY);
+                }
+
+                break;
+            }
+
+            case DRAG_STOP: {
+                DragAndDropComponent dragAndDropComponent = DragAndDropComponent.getComponent(entity);
+                if (dragAndDropComponent != null) {
+                    dragAndDropComponent.isDragging = false;
+                    dragAndDropComponent.dragStop.set(viewport.unproject(drag));
+                    dragAndDropComponent.dragStart.setZero();
+                    dragAndDropComponent.dragPosition.setZero();
+                    dragAndDropComponent.dragDelta.setZero();
+                }
+                break;
+            }
         }
     }
 
-    private class InputGestures implements GestureDetector.GestureListener {
+    private class InputGestures implements GestureDetector.GestureListener, InputDragAndDrop.DragAndDropInterface {
 
         public InputGestures(InputMultiplexer inputMultiplexer) {
-            inputMultiplexer.addProcessor(new GestureDetector(this));
+            inputMultiplexer.addProcessor(new MyGestureDetector(this, this));
         }
 
         @Override
@@ -272,7 +331,99 @@ public class GestureInputSystem extends EventSystem {
 
         @Override
         public boolean touchDown(float x, float y, int pointer, int button) {
+            touchdown.set(x,y);
             return false;
+        }
+
+
+        @Override
+        public void dragStart(float x, float y) {
+            currentEvent = TouchEvent.DRAG_START;
+            drag.set(x, y);
+            update();
+        }
+
+        @Override
+        public void dragProcess(float x, float y, float deltaX, float deltaY) {
+            currentEvent = TouchEvent.DRAG;
+            drag.set(x, y);
+            dragDelta.set(deltaX, deltaY);
+            update();
+        }
+
+        @Override
+        public void dragStop(float x, float y) {
+            currentEvent = TouchEvent.DRAG_STOP;
+            drag.set(x, y);
+            update();
+        }
+    }
+
+    private static class InputDragAndDrop extends DragListener{
+
+        private final DragAndDropInterface dragAndDropInterface;
+
+        public InputDragAndDrop(DragAndDropInterface dragAndDropInterface) {
+            this.dragAndDropInterface = dragAndDropInterface;
+        }
+
+        @Override
+        public void dragStart(InputEvent event, float x, float y, int pointer) {
+            dragAndDropInterface.dragStart(x, y);
+        }
+
+        @Override
+        public void drag(InputEvent event, float x, float y, int pointer) {
+            dragAndDropInterface.dragProcess(x, y, getDeltaX(), getDeltaY());
+        }
+
+        @Override
+        public void dragStop(InputEvent event, float x, float y, int pointer) {
+            dragAndDropInterface.dragStop(x, y);
+        }
+
+        public interface DragAndDropInterface {
+            void dragStart(float x, float y);
+            void dragProcess(float x, float y, float deltaX, float deltaY);
+            void dragStop(float x, float y);
+        }
+    }
+
+    private static  class MyGestureDetector extends GestureDetector {
+
+        private final InputDragAndDrop dragAndDrop;
+        private final InputEvent event = new InputEvent();
+
+        public MyGestureDetector(GestureListener listener, InputDragAndDrop.DragAndDropInterface dragAndDropInterface) {
+            super(listener);
+            dragAndDrop = new InputDragAndDrop(dragAndDropInterface);
+        }
+
+        @Override
+        public boolean touchDown(float x, float y, int pointer, int button) {
+            boolean re = super.touchDown(x, y, pointer, button);
+
+            dragAndDrop.touchDown(event, x, y, pointer, button);
+
+            return re;
+        }
+
+        @Override
+        public boolean touchDragged(float x, float y, int pointer) {
+            boolean re = super.touchDragged(x, y, pointer);
+
+            dragAndDrop.touchDragged(event, x, y, pointer);
+
+            return re;
+        }
+
+        @Override
+        public boolean touchUp(float x, float y, int pointer, int button) {
+            boolean re = super.touchUp(x, y, pointer, button);
+
+            dragAndDrop.touchUp(event, x, y, pointer, button);
+
+            return re;
         }
     }
 
@@ -284,6 +435,9 @@ public class GestureInputSystem extends EventSystem {
         ZOOM,
         FLING,
         ROTATE,
+        DRAG_START,
+        DRAG,
+        DRAG_STOP,
         NULL
     }
 }
