@@ -3,6 +3,7 @@ package com.github.exformatgames.defender.systems.input_systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
@@ -39,7 +40,7 @@ public class GestureInputSystem extends EventSystem {
     private float rotationOld = 0;
 
     private Vector3 screenCoordinates = new Vector3();
-    private final Vector2 touchdown = new Vector2();
+    //private final Vector2 touchdown = new Vector2();
 
     private final Vector2 drag = new Vector2();
     private final Vector2 dragDelta = new Vector2();
@@ -104,7 +105,7 @@ public class GestureInputSystem extends EventSystem {
                     screenCoords.set(pan.x, pan.y);
 
                     viewport.unproject(screenCoords);
-                    viewport.unproject(touchdown);
+                    //viewport.unproject(touchdown);
 
                     GesturePanComponent.position.set(screenCoords.x, screenCoords.y);
 
@@ -210,8 +211,8 @@ public class GestureInputSystem extends EventSystem {
                     float asX = Configurations.WORLD_WIDTH / viewport.getScreenWidth();
                     float asY = Configurations.WORLD_HEIGHT / viewport.getScreenHeight();
 
-
-                    dragAndDropComponent.dragDelta.set(dragDelta.x * asX, dragDelta.y * asY);
+                    dragAndDropComponent.dragPosition.set(drag.x, drag.y).scl(((OrthographicCamera)viewport.getCamera()).zoom);
+                    dragAndDropComponent.dragDelta.set(dragDelta.x * asX, dragDelta.y * asY).scl(((OrthographicCamera)viewport.getCamera()).zoom);
                 }
 
                 break;
@@ -333,7 +334,7 @@ public class GestureInputSystem extends EventSystem {
 
         @Override
         public boolean touchDown(float x, float y, int pointer, int button) {
-            touchdown.set(x,y);
+            //touchdown.set(x,y);
             return false;
         }
 
