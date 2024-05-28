@@ -64,6 +64,8 @@ public class GestureInputSystem extends EventSystem {
     @Override
     public void startProcessing() {
         viewport.apply();
+
+        viewport.unproject(drag);
     }
 
     @Override
@@ -195,7 +197,7 @@ public class GestureInputSystem extends EventSystem {
                 if (dragAndDropComponent != null) {
                     dragAndDropComponent.isDragging = true;
                     dragAndDropComponent.dragStop.setZero();
-                    dragAndDropComponent.dragStart.set(viewport.unproject(drag));
+                    dragAndDropComponent.dragStart.set(drag);
                     dragAndDropComponent.dragPosition.setZero();
                     dragAndDropComponent.dragDelta.setZero();
                 }
@@ -208,8 +210,8 @@ public class GestureInputSystem extends EventSystem {
                     float asX = Configurations.WORLD_WIDTH / viewport.getScreenWidth();
                     float asY = Configurations.WORLD_HEIGHT / viewport.getScreenHeight();
 
-                    dragAndDropComponent.dragPosition.set(viewport.unproject(drag));
-                    dragAndDropComponent.dragDelta.set(drag.x * asX, drag.y * asY);
+
+                    dragAndDropComponent.dragDelta.set(dragDelta.x * asX, dragDelta.y * asY);
                 }
 
                 break;
@@ -219,7 +221,7 @@ public class GestureInputSystem extends EventSystem {
                 DragAndDropComponent dragAndDropComponent = DragAndDropComponent.getComponent(entity);
                 if (dragAndDropComponent != null) {
                     dragAndDropComponent.isDragging = false;
-                    dragAndDropComponent.dragStop.set(viewport.unproject(drag));
+                    dragAndDropComponent.dragStop.set(drag);
                     dragAndDropComponent.dragStart.setZero();
                     dragAndDropComponent.dragPosition.setZero();
                     dragAndDropComponent.dragDelta.setZero();
