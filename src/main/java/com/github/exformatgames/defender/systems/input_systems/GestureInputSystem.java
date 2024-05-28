@@ -107,13 +107,13 @@ public class GestureInputSystem extends EventSystem {
                     viewport.unproject(screenCoords);
                     //viewport.unproject(touchdown);
 
-                    GesturePanComponent.position.set(screenCoords.x, screenCoords.y);
+                    GesturePanComponent.position.set(screenCoords.x, screenCoords.y).scl(((OrthographicCamera)viewport.getCamera()).zoom);
 
                     float asX = Configurations.WORLD_WIDTH / viewport.getScreenWidth();
                     float asY = Configurations.WORLD_HEIGHT / viewport.getScreenHeight();
 
                     screenCoords.set(panDelta.x * asX, panDelta.y * asY);
-                    GesturePanComponent.delta.set(screenCoords.x, screenCoords.y);
+                    GesturePanComponent.delta.set(screenCoords.x, screenCoords.y).scl(((OrthographicCamera)viewport.getCamera()).zoom);
                     GesturePanComponent.direction.set(screenCoords.x, screenCoords.y).nor();
                 }
 
